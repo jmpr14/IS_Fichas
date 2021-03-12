@@ -1,10 +1,8 @@
-import com.mysql.cj.exceptions.DataReadException;
-
 import java.sql.*;
 
 public class DataBase {
 
-    private String pass;
+    private final String pass;
 
     public DataBase(String pass) {
         this.pass = pass;
@@ -25,7 +23,7 @@ public class DataBase {
             rss.next();
 
             boolean a = true;
-            if (rss.next()==false) a = false;
+            if (!rss.next()) a = false;
             conn.close();
 
             return a;
@@ -37,7 +35,8 @@ public class DataBase {
         return false;
     }
 
-    public void insertExame(String descricao, String sigla) {
+    public int insertExame(String descricao, String sigla) {
+        int a = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -47,15 +46,24 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
+            stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
 
+            Statement select = conn.createStatement();
+
+            String sql = "SELECT LAST_INSERT_ID();";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getInt(1);
             conn.close();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return a;
     }
 
     public int insertDoente(String nome, String telefone, String num_utente, String morada) {
+        int a = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -65,23 +73,46 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Doente (num_utente,nome,telefone,morada) values(\"" + num_utente + "\", \"" + nome + "\", \"" + telefone + "\", \"" + morada + "\");");
+            stmt.execute("insert into Doente (num_utente,nome,telefone,morada) values(\"" + num_utente + "\", \"" + nome + "\", \"" + telefone + "\", \"" + morada + "\");");
 
             Statement select = conn.createStatement();
 
             String sql = "select id_doente from Doente where num_utente=" + num_utente + ";";
             ResultSet rss = select.executeQuery(sql);
             rss.next();
-            int a = rss.getInt(1);
+            a = rss.getInt(1);
             conn.close();
-            return a;
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return a;
     }
 
-    public void insertPedido(String descricao, String sigla) {
+    public int getIdDoente(String num_utente) {
+        int a = 0;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select id_doente from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getInt(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public void insertPedido(int id_exame, int id_doente) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -91,7 +122,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Pedido values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
+            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\");");
 
             conn.close();
         } catch (Exception e) {
@@ -121,7 +152,7 @@ public class DataBase {
             }
 
             conn.close();
-        } catch ( Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

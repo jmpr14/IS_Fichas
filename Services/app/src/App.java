@@ -46,15 +46,14 @@ public class App {
                             String telefone = reader.readLine();
 
                             id_doente = bd.insertDoente(nome, telefone, numUtente, morada);
-                        }
+                        } else id_doente = bd.getIdDoente(numUtente);
                         System.out.println("-- Insira a sigla do tipo de Exame");
                         String siglaExame = reader.readLine();
                         System.out.println("-- Insira descrição acerca do exame (opcional)");
                         String descricao = reader.readLine();
 
-                        bd.insertExame(descricao, siglaExame);
-                        java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
-                        bd.insertPedido();
+                        int id_exame = bd.insertExame(descricao, siglaExame);
+                        bd.insertPedido(id_exame,id_doente);
 
                         break;
                     case 2:
