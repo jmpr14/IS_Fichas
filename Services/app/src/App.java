@@ -1,6 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.Scanner;
 
@@ -10,17 +8,19 @@ public class App {
 
         Scanner scanner = new Scanner(System.in);
 
-        String configs;
+        String pass = "";
 
         try {
             FileReader arq = new FileReader("configs.txt");
             BufferedReader lerArq = new BufferedReader(arq);
 
-            configs = lerArq.readLine();
+            pass = lerArq.readLine();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
         }
+
+        DataBase.get(pass);
 
         int op = -1;
 
