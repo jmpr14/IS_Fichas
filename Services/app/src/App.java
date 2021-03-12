@@ -15,8 +15,7 @@ public class App {
             BufferedReader lerArq = new BufferedReader(arq);
 
             pass = lerArq.readLine();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -24,7 +23,7 @@ public class App {
 
         int op = -1;
 
-        while(op != 0){
+        while (op != 0) {
 
             System.out.println("0 - Sair");
             System.out.println("1 - Novo Pedido");
@@ -33,11 +32,13 @@ public class App {
 
             op = scanner.nextInt();
 
-            switch (op){
+            switch (op) {
                 case 1:
                     System.out.println("Insira número do paciente");
                     String numPaciente = scanner.nextInt();
-                    if(numPaciente)
+                    if (numPaciente) {
+
+                    }
                     System.out.println("Insira número do processo do paciente");
                     System.out.println("Insira a morada do paciente");
                     System.out.println("Insira o telefone do paciente");
