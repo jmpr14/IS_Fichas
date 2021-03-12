@@ -5,6 +5,34 @@ import java.sql.Statement;
 
 public class DataBase {
 
+    public static void insertTipoExame(String pass, String sigla, String descricao){
+
+        try
+        {
+//step1 load the driver class
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+//step2 create  the connection object
+            //Connection con = DriverManager.getConnection(
+            //      "jdbc:mysql://localhost:1521/orclpdb1.localdomain", "monitor", "monitor");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + pass +"&useTimezone=true&serverTimezone=UTC");
+//step3 create the statement object
+            Statement stmt = conn.createStatement();
+
+//step4 execute query
+            boolean a = stmt.execute("insert into Tipo_Exame values(0,\"" + sigla + "\", \"" + descricao + "\");");
+
+//step5 close the connection object
+            conn.close();
+        } catch(
+                Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public static void get(String pass) {
 
