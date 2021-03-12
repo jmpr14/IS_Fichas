@@ -35,6 +35,15 @@ public class App {
 
             switch (op){
                 case 1:
+                    System.out.println("Insira número do paciente");
+                    String numPaciente = scanner.nextInt();
+                    if(numPaciente)
+                    System.out.println("Insira número do processo do paciente");
+                    System.out.println("Insira a morada do paciente");
+                    System.out.println("Insira o telefone do paciente");
+                    System.out.println("Insira o número do episódio");
+                    System.out.println("Insira o telefone do paciente");
+
 
                     break;
                 case 2:
