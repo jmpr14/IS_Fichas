@@ -29,30 +29,32 @@ public class App {
             System.out.println("3 - Ver Relatórios");
 
             try {
-                op = reader.readLine();
+                op = Integer.parseInt(reader.readLine());
 
                 switch (op) {
                     case 1:
                         System.out.println("-- Insira número de Utente do paciente");
                         String numUtente = reader.readLine();
+                        int id_doente;
                         if (!bd.checkDoente(numUtente)) {
+                            System.out.println("---- NOVO REGISTO DE DOENTE");
                             System.out.println("-- Insira nome do paciente");
-                            String nome = scanner.nextLine();
+                            String nome = reader.readLine();
                             System.out.println("-- Insira a morada do paciente");
-                            String morada = scanner.nextLine();
+                            String morada = reader.readLine();
                             System.out.println("-- Insira o telefone do paciente");
-                            String telefone = scanner.nextLine();
+                            String telefone = reader.readLine();
 
-                            bd.insertDoente(nome, telefone, numUtente, morada);
+                            id_doente = bd.insertDoente(nome, telefone, numUtente, morada);
                         }
                         System.out.println("-- Insira a sigla do tipo de Exame");
-                        String siglaExame = scanner.nextLine();
-                        //System.out.println("-- Insira o número do episódio");
-                        //Integer numEpisodio = scanner.nextInt();
+                        String siglaExame = reader.readLine();
                         System.out.println("-- Insira descrição acerca do exame (opcional)");
-                        String descricao = scanner.nextLine();
+                        String descricao = reader.readLine();
 
                         bd.insertExame(descricao, siglaExame);
+                        java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
+                        bd.insertPedido();
 
                         break;
                     case 2:

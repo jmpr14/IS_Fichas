@@ -1,9 +1,6 @@
 import com.mysql.cj.exceptions.DataReadException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DataBase {
 
@@ -58,7 +55,7 @@ public class DataBase {
         }
     }
 
-    public void insertDoente(String nome, String telefone, String num_utente, String morada) {
+    public int insertDoente(String nome, String telefone, String num_utente, String morada) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -68,14 +65,39 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Doente values(0,\"" + nome + "\", \"" + telefone + "\", \"" + num_utente + "\", \"" + morada + "\");");
+            boolean a = stmt.execute("insert into Doente (num_utente,nome,telefone,morada) values(\"" + num_utente + "\", \"" + nome + "\", \"" + telefone + "\", \"" + morada + "\");");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select id_doente from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            int a = rss.getInt(1);
+            conn.close();
+            return a;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void insertPedido(String descricao, String sigla) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+
+            boolean a = stmt.execute("insert into Pedido values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
 
             conn.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public void get() {
         try {
