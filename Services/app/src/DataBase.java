@@ -39,9 +39,8 @@ public class DataBase {
             conn.close();
         } catch(
                 Exception e)
-
         {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 }
