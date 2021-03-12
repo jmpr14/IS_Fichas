@@ -7,7 +7,6 @@ public class DataBase {
 
 
     public static void get(String pass) {
-
         try
         {
 //step1 load the driver class
@@ -37,11 +36,12 @@ public class DataBase {
 
 //step5 close the connection object
             conn.close();
-        } catch(
-                Exception e)
+        } catch(Exception e)
 
         {
             System.out.println(e);
         }
     }
+
+
 }

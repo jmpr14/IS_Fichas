@@ -28,8 +28,8 @@ public class App {
 
             System.out.println("0 - Sair");
             System.out.println("1 - Novo Pedido");
-            System.out.println("2 - Novo Exame");
-            System.out.println("3 - Alterar Exame");
+            System.out.println("2 - Ver Pedidos");
+            System.out.println("3 - Ver Relatórios");
 
             op = scanner.nextInt();
 
