@@ -9,11 +9,11 @@ public class DataBase {
 
     private String pass;
 
-    public DataBase(String pass){
+    public DataBase(String pass) {
         this.pass = pass;
     }
 
-    public boolean checkUser(int numPaciente) {
+    public boolean checkDoente(String numUtente) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -23,13 +23,13 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            String sql = "select * from Doente where id_doente=" + numPaciente + ";";
+            String sql = "select * from Doente where num_utente=" + numUtente + ";";
             ResultSet rss = stmt.executeQuery(sql);
             rss.next();
 
-            conn.close();
             boolean a = true;
-            if (rss.getString(1)=="") a = false;
+            if (rss.next()==false) a = false;
+            conn.close();
 
             return a;
 
@@ -41,7 +41,7 @@ public class DataBase {
         return false;
     }
 
-    public void insertExame(String descricao, String sigla, String relatorio) {
+    public void insertExame(String descricao, String sigla) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -51,7 +51,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + relatorio + "\", \"" + sigla + "\");");
+            boolean a = stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
 
             conn.close();
         } catch (
@@ -59,7 +59,7 @@ public class DataBase {
             System.out.println(e.getMessage());
         }
     }
-    
+
     public void insertDoente(String nome, String telefone, String num_utente, String morada) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

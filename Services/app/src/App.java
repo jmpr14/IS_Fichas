@@ -6,21 +6,17 @@ public class App {
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
-
         String pass = "";
-
         try {
             FileReader arq = new FileReader("configs.txt");
             BufferedReader lerArq = new BufferedReader(arq);
-
             pass = lerArq.readLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        DataBase bd = new DataBase(pass);
 
-        DataBase.get(pass);
-
+        Scanner scanner = new Scanner(System.in);
         int op = -1;
 
         while (op != 0) {
@@ -35,24 +31,26 @@ public class App {
 
             switch (op) {
                 case 1:
-                    System.out.println("-- Insira número do paciente");
-                    Integer numPaciente = scanner.nextInt();
-                    if (!DataBase.checkUser(pass, numPaciente)) {
+                    System.out.println("-- Insira número de Utente do paciente");
+                    String numUtente = scanner.next();
+                    if (!bd.checkDoente(numUtente)) {
                         System.out.println("-- Insira nome do paciente");
-                        String nome = scanner.next();
-                        System.out.println("-- Insira número do processo do paciente");
-                        Integer numProcesso = scanner.nextInt();
+                        String nome = scanner.nextLine();
                         System.out.println("-- Insira a morada do paciente");
-                        String morada = scanner.next();
+                        String morada = scanner.nextLine();
                         System.out.println("-- Insira o telefone do paciente");
-                        Integer telefone = scanner.nextInt();
+                        String telefone = scanner.nextLine();
+
+                        bd.insertDoente(nome, telefone, numUtente, morada);
                     }
                     System.out.println("-- Insira a sigla do tipo de Exame");
-                    String siglaExame = scanner.next();
-                    System.out.println("-- Insira o número do episódio");
-                    Integer numEpisodio = scanner.nextInt();
+                    String siglaExame = scanner.nextLine();
+                    //System.out.println("-- Insira o número do episódio");
+                    //Integer numEpisodio = scanner.nextInt();
                     System.out.println("-- Insira descrição acerca do exame (opcional)");
-                    String descricao = scanner.next();
+                    String descricao = scanner.nextLine();
+
+                    bd.insertExame(descricao, siglaExame);
 
                     break;
                 case 2:
