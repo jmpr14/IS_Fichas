@@ -41,7 +41,7 @@ public class DataBase {
         return false;
     }
 
-    public void insertTipoExame(String sigla, String descricao) {
+    public void insertExame(String descricao, String sigla, String relatorio) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -51,7 +51,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            boolean a = stmt.execute("insert into Tipo_Exame values(0,\"" + sigla + "\", \"" + descricao + "\");");
+            boolean a = stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + relatorio + "\", \"" + sigla + "\");");
 
             conn.close();
         } catch (
@@ -59,6 +59,26 @@ public class DataBase {
             System.out.println(e.getMessage());
         }
     }
+    
+    public void insertDoente(String nome, String telefone, String num_utente, String morada) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+
+            boolean a = stmt.execute("insert into Doente values(0,\"" + nome + "\", \"" + telefone + "\", \"" + num_utente + "\", \"" + morada + "\");");
+
+            conn.close();
+        } catch (
+                Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public void get() {
         try {
