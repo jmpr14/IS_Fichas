@@ -9,6 +9,8 @@ public class DataBase {
     }
 
     public boolean checkDoente(String numUtente) {
+        boolean a = true;
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -20,9 +22,7 @@ public class DataBase {
 
             String sql = "select * from Doente where num_utente=" + numUtente + ";";
             ResultSet rss = stmt.executeQuery(sql);
-            rss.next();
 
-            boolean a = true;
             if (!rss.next()) a = false;
             conn.close();
 
@@ -31,8 +31,7 @@ public class DataBase {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-        return false;
+        return a;
     }
 
     public int insertExame(String descricao, String sigla) {
@@ -130,7 +129,7 @@ public class DataBase {
         }
     }
 
-    public void get() {
+    public void showPedidos() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -139,21 +138,82 @@ public class DataBase {
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
-            Statement media = conn.createStatement();
 
-            ResultSet rs = stmt.executeQuery("select * from tipo_exame");
+            ResultSet rs = stmt.executeQuery("select * from Pedido");
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            System.out.println("--------------------------------------------------------------------------");
+            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  | PACIENTE");
+            int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
-                int idPL = rs.getInt(1);
-                System.out.println(idPL);
-                String sql = "select descricao from tipo_exame where id_tipo_exame=" + idPL + ";";
-                ResultSet rss = media.executeQuery(sql);
-                rss.next();
-                System.out.println(rss.getString(1));
-            }
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i == 1) System.out.print("    ");
+                    else System.out.print("     ");
+                    String columnValue = rs.getString(i);
+                    switch (i) {
+                        case 4:
+                            if (Integer.parseInt(columnValue) == 0) System.out.print("Em espera");
+                            else if (Integer.parseInt(columnValue) == 1) System.out.print("Realizado");
+                            else System.out.print("Cancelado");
+                            break;
+                        case 5:
+                            int id_Exame = Integer.parseInt(columnValue);
+                            Statement media1 = conn.createStatement();
+                            ResultSet rss1 = media1.executeQuery("select sigla from Exame where id_exame=" + id_Exame + ";");
+                            rss1.next();
+                            System.out.print(rss1.getString(1));
+                            break;
+                        case 6:
+                            int id_Doente = Integer.parseInt(columnValue);
+                            Statement media2 = conn.createStatement();
+                            ResultSet rss2 = media2.executeQuery("select nome from Doente where id_doente=" + id_Doente + ";");
+                            rss2.next();
+                            System.out.print(rss2.getString(1));
+                            break;
+                        default:
+                            System.out.print(columnValue);
+                            break;
+                    }
 
+                }
+                System.out.println();
+            }
+            System.out.println("--------------------------------------------------------------------------\n");
             conn.close();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+
+    public boolean cancelarPedido(String id_Pedido) {
+        boolean a = true;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select estado from Pedido WHERE id_pedido = " + id_Pedido + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+
+            if (rss.getInt(1) == 0) {
+                Statement stmt = conn.createStatement();
+                stmt.execute("UPDATE Pedido SET estado = 2 WHERE id_pedido = " + id_Pedido + ";");
+            } else a = false;
+
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
 }
