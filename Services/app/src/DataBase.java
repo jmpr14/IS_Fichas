@@ -111,7 +111,8 @@ public class DataBase {
         return a;
     }
 
-    public void insertPedido(int id_exame, int id_doente, String descricao) {
+    public int insertPedido(int id_exame, int id_doente, String descricao) {
+        int a = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -123,7 +124,32 @@ public class DataBase {
 
             stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\", \"" + descricao + "\");");
 
+            Statement select = conn.createStatement();
+
+            String sql = "SELECT LAST_INSERT_ID();";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getInt(1);
+
             conn.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public void insertWorklist(int id_pedido, int alteracao) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+            stmt.execute("insert into Worklist values(0,\"" + id_pedido + "\", NOW(), \"" + alteracao + "\");");
+            conn.close();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -143,8 +169,8 @@ public class DataBase {
 
             ResultSetMetaData rsmd = rs.getMetaData();
 
-            System.out.println("--------------------------------------------------------------------------");
-            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  |    PACIENTE   |  DESCRIÇÂO");
+            System.out.println("-----------------------------------------------------------------------------------------------");
+            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  |     PACIENTE    |  DESCRIÇÂO");
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
@@ -179,7 +205,7 @@ public class DataBase {
                 }
                 System.out.println();
             }
-            System.out.println("--------------------------------------------------------------------------\n");
+            System.out.println("-----------------------------------------------------------------------------------------------\n");
             conn.close();
 
         } catch (Exception e) {

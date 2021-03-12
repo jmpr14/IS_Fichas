@@ -57,8 +57,8 @@ public class App {
                         String descricao = reader.readLine();
 
                         int id_exame = bd.insertExame(siglaExame);
-                        bd.insertPedido(id_exame, id_doente, descricao);
-
+                        int id_pedido = bd.insertPedido(id_exame, id_doente, descricao);
+                        bd.insertWorklist(id_pedido,0);
                         break;
                     case 2:
                         bd.showPedidos();
@@ -70,7 +70,10 @@ public class App {
                     case 4:
                         System.out.println("-- Insira o número do Pedido a cancelar.");
                         String num_Pedido = reader.readLine();
-                        if (bd.cancelarPedido(num_Pedido)) System.out.println("Pedido Cancelado com sucesso!");
+                        if (bd.cancelarPedido(num_Pedido)){
+                            System.out.println("Pedido Cancelado com sucesso!");
+                            bd.insertWorklist(Integer.parseInt(num_Pedido),2);
+                        }
                         else System.out.println("Operação inválida!");
                         break;
                     default:
