@@ -33,8 +33,7 @@ public class DataBase {
 
             return a;
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -54,8 +53,7 @@ public class DataBase {
             boolean a = stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
 
             conn.close();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -73,8 +71,7 @@ public class DataBase {
             boolean a = stmt.execute("insert into Doente values(0,\"" + nome + "\", \"" + telefone + "\", \"" + num_utente + "\", \"" + morada + "\");");
 
             conn.close();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -102,8 +99,7 @@ public class DataBase {
             }
 
             conn.close();
-        } catch (
-                Exception e) {
+        } catch ( Exception e) {
             System.out.println(e.getMessage());
         }
     }
