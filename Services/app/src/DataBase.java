@@ -34,7 +34,7 @@ public class DataBase {
         return a;
     }
 
-    public int insertExame(String descricao, String sigla) {
+    public int insertExame(String sigla) {
         int a = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -45,7 +45,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            stmt.execute("insert into Exame values(0,\"" + descricao + "\", \"" + "" + "\", \"" + sigla + "\");");
+            stmt.execute("insert into Exame values(0,\"" + "" + "\", \"" + sigla + "\");");
 
             Statement select = conn.createStatement();
 
@@ -111,7 +111,7 @@ public class DataBase {
         return a;
     }
 
-    public void insertPedido(int id_exame, int id_doente) {
+    public void insertPedido(int id_exame, int id_doente, String descricao) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -121,7 +121,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\");");
+            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\", \"" + descricao + "\");");
 
             conn.close();
         } catch (Exception e) {
@@ -144,7 +144,7 @@ public class DataBase {
             ResultSetMetaData rsmd = rs.getMetaData();
 
             System.out.println("--------------------------------------------------------------------------");
-            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  | PACIENTE");
+            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  |    PACIENTE   |  DESCRIÇÂO");
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
@@ -180,6 +180,35 @@ public class DataBase {
                 System.out.println();
             }
             System.out.println("--------------------------------------------------------------------------\n");
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void showRelatorio(String id_Pedido) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+            boolean exists = true;
+            String sql = "select * from Pedido where id_pedido=" + id_Pedido + ";";
+            ResultSet rss = stmt.executeQuery(sql);
+
+            if (!rss.next()) exists = false;
+
+            if (exists) {
+                String query = "select relatorio from Pedido,Exame where id_pedido=" + id_Pedido + " AND Exame_id_exame = id_exame;";
+                ResultSet rs = stmt.executeQuery(query); rs.next();
+                System.out.println("\nRelatório do Pedido número " + id_Pedido + ":");
+                System.out.println(rs.getString(1) + "\n");
+            } else System.out.println("Operação Inválida!");
+
             conn.close();
 
         } catch (Exception e) {
