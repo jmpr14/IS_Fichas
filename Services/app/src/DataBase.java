@@ -1,3 +1,5 @@
+import com.mysql.cj.exceptions.DataReadException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -5,13 +7,19 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    public static boolean checkUser(String pass, int numPaciente) {
+    private String pass;
+
+    public DataBase(String pass){
+        this.pass = pass;
+    }
+
+    public boolean checkUser(int numPaciente) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + pass + "&useTimezone=true&serverTimezone=UTC");
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
 
@@ -23,21 +31,23 @@ public class DataBase {
             boolean a = true;
             if (rss.getString(1)=="") a = false;
 
+            return a;
+
         } catch (
                 Exception e) {
             System.out.println(e.getMessage());
         }
 
-        return a;
+        return false;
     }
 
-    public static void insertTipoExame(String pass, String sigla, String descricao) {
+    public void insertTipoExame(String sigla, String descricao) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + pass + "&useTimezone=true&serverTimezone=UTC");
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
 
@@ -50,13 +60,13 @@ public class DataBase {
         }
     }
 
-    public static void get(String pass) {
+    public void get() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + pass + "&useTimezone=true&serverTimezone=UTC");
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
             Statement media = conn.createStatement();
