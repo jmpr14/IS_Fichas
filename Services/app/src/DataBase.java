@@ -5,7 +5,7 @@ import java.sql.Statement;
 
 public class DataBase {
 
-    public static boolean getUser(String pass, int numPaciente) {
+    public static boolean checkUser(String pass, int numPaciente) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 

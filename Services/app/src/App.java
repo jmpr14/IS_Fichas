@@ -25,6 +25,7 @@ public class App {
 
         while (op != 0) {
 
+            System.out.println("> INDIQUE O NÚMERO DA OPÇÃO");
             System.out.println("0 - Sair");
             System.out.println("1 - Novo Pedido");
             System.out.println("2 - Ver Pedidos");
@@ -34,17 +35,24 @@ public class App {
 
             switch (op) {
                 case 1:
-                    System.out.println("Insira número do paciente");
-                    String numPaciente = scanner.nextInt();
-                    if (numPaciente) {
-
+                    System.out.println("-- Insira número do paciente");
+                    Integer numPaciente = scanner.nextInt();
+                    if (!DataBase.checkUser(pass, numPaciente)) {
+                        System.out.println("-- Insira nome do paciente");
+                        String nome = scanner.next();
+                        System.out.println("-- Insira número do processo do paciente");
+                        Integer numProcesso = scanner.nextInt();
+                        System.out.println("-- Insira a morada do paciente");
+                        String morada = scanner.next();
+                        System.out.println("-- Insira o telefone do paciente");
+                        Integer telefone = scanner.nextInt();
                     }
-                    System.out.println("Insira número do processo do paciente");
-                    System.out.println("Insira a morada do paciente");
-                    System.out.println("Insira o telefone do paciente");
-                    System.out.println("Insira o número do episódio");
-                    System.out.println("Insira o telefone do paciente");
-
+                    System.out.println("-- Insira a sigla do tipo de Exame");
+                    String siglaExame = scanner.next();
+                    System.out.println("-- Insira o número do episódio");
+                    Integer numEpisodio = scanner.nextInt();
+                    System.out.println("-- Insira descrição acerca do exame (opcional)");
+                    String descricao = scanner.next();
 
                     break;
                 case 2:
