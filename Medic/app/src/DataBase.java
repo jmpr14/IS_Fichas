@@ -8,159 +8,12 @@ public class DataBase {
         this.pass = pass;
     }
 
-    public boolean checkDoente(String numUtente) {
-        boolean a = true;
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement stmt = conn.createStatement();
-
-            String sql = "select * from Doente where num_utente=" + numUtente + ";";
-            ResultSet rss = stmt.executeQuery(sql);
-
-            if (!rss.next()) a = false;
-            conn.close();
-
-            return a;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return a;
-    }
-
-    public int insertExame(String sigla) {
-        int a = 0;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement stmt = conn.createStatement();
-
-            stmt.execute("insert into Exame values(0,\"" + "" + "\", \"" + sigla + "\");");
-
-            Statement select = conn.createStatement();
-
-            String sql = "SELECT LAST_INSERT_ID();";
-            ResultSet rss = select.executeQuery(sql);
-            rss.next();
-            a = rss.getInt(1);
-            conn.close();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return a;
-    }
-
-    public int insertDoente(String nome, String telefone, String num_utente, String morada) {
-        int a = 0;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement stmt = conn.createStatement();
-
-            stmt.execute("insert into Doente (num_utente,nome,telefone,morada) values(\"" + num_utente + "\", \"" + nome + "\", \"" + telefone + "\", \"" + morada + "\");");
-
-            Statement select = conn.createStatement();
-
-            String sql = "select id_doente from Doente where num_utente=" + num_utente + ";";
-            ResultSet rss = select.executeQuery(sql);
-            rss.next();
-            a = rss.getInt(1);
-            conn.close();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return a;
-    }
-
-    public int getIdDoente(String num_utente) {
-        int a = 0;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement select = conn.createStatement();
-
-            String sql = "select id_doente from Doente where num_utente=" + num_utente + ";";
-            ResultSet rss = select.executeQuery(sql);
-            rss.next();
-            a = rss.getInt(1);
-            conn.close();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return a;
-    }
-
-    public int insertPedido(int id_exame, int id_doente, String descricao) {
-        int a = 0;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement stmt = conn.createStatement();
-
-            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\", \"" + descricao + "\");");
-
-            Statement select = conn.createStatement();
-
-            String sql = "SELECT LAST_INSERT_ID();";
-            ResultSet rss = select.executeQuery(sql);
-            rss.next();
-            a = rss.getInt(1);
-
-            conn.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return a;
-    }
-
-    public void insertWorklist(int id_pedido, int alteracao) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
-                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
-
-            Statement stmt = conn.createStatement();
-            stmt.execute("insert into Worklist values(0,\"" + id_pedido + "\", NOW(), \"" + alteracao + "\");");
-            conn.close();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public void showPedidos() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
@@ -218,7 +71,7 @@ public class DataBase {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
@@ -230,7 +83,8 @@ public class DataBase {
 
             if (exists) {
                 String query = "select relatorio from Pedido,Exame where id_pedido=" + id_Pedido + " AND Exame_id_exame = id_exame;";
-                ResultSet rs = stmt.executeQuery(query); rs.next();
+                ResultSet rs = stmt.executeQuery(query);
+                rs.next();
                 System.out.println("\nRelatório do Pedido número " + id_Pedido + ":");
                 System.out.println(rs.getString(1) + "\n");
             } else System.out.println("Operação Inválida!");
@@ -242,13 +96,13 @@ public class DataBase {
         }
     }
 
-    public boolean cancelarPedido(String id_Pedido) {
+    public boolean realizarPedido(String id_Pedido, String num_ep) {
         boolean a = true;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement select = conn.createStatement();
@@ -258,8 +112,10 @@ public class DataBase {
             rss.next();
 
             if (rss.getInt(1) == 0) {
-                Statement stmt = conn.createStatement();
-                stmt.execute("UPDATE Pedido SET estado = 2 WHERE id_pedido = " + id_Pedido + ";");
+                Statement estado = conn.createStatement();
+                estado.execute("UPDATE Pedido SET estado = 1 WHERE id_pedido = " + id_Pedido + ";");
+                Statement episodio = conn.createStatement();
+                episodio.execute("UPDATE Pedido SET num_ep = " + num_ep + " WHERE id_pedido = " + id_Pedido + ";");
             } else a = false;
 
             conn.close();
@@ -268,6 +124,47 @@ public class DataBase {
             System.out.println(e.getMessage());
         }
         return a;
+    }
+
+    public void insertRelatorio(String id_pedido, String relatorio) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select Exame_id_exame from Pedido WHERE id_pedido = " + id_pedido + ";";
+            ResultSet rss = select.executeQuery(sql); rss.next();
+            int id_exame = rss.getInt(1);
+
+            Statement stmt = conn.createStatement();
+            stmt.execute("UPDATE Exame SET relatorio = \"" + relatorio + "\" WHERE id_exame = " + id_exame + ";");
+
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void insertWorklist(int id_pedido, int alteracao) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+            stmt.execute("insert into Worklist values(0,\"" + id_pedido + "\", NOW(), \"" + alteracao + "\");");
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

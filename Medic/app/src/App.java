@@ -20,14 +20,17 @@ public class App {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int op = -1;
 
+        System.out.println("\n-------------------------------------------------------------");
+        System.out.println("------------------------- MEDIC APP -------------------------");
+        System.out.println("-------------------------------------------------------------");
+
         while (op != 0) {
 
             System.out.println("\n> INDIQUE O NÚMERO DA OPERAÇÃO PRETENDIDA:");
             System.out.println("0 - Sair.");
-            System.out.println("1 - Novo Pedido.");
-            System.out.println("2 - Ver Pedidos.");
-            System.out.println("3 - Ver Relatório.");
-            System.out.println("4 - Cancelar Pedido.");
+            System.out.println("1 - Ver Pedidos.");
+            System.out.println("2 - Ver Relatório.");
+            System.out.println("3 - Realizar exame.");
 
             try {
                 op = Integer.parseInt(reader.readLine());
@@ -37,42 +40,25 @@ public class App {
                         System.out.println("\nA SAIR!");
                         break;
                     case 1:
-                        System.out.println("-- Insira o número de Utente do paciente.");
-                        String numUtente = reader.readLine();
-                        int id_doente;
-                        if (!bd.checkDoente(numUtente)) {
-                            System.out.println("---- NOVO REGISTO DE DOENTE ----");
-                            System.out.println("-- Insira o nome do paciente.");
-                            String nome = reader.readLine();
-                            System.out.println("-- Insira a morada do paciente.");
-                            String morada = reader.readLine();
-                            System.out.println("-- Insira o telefone do paciente.");
-                            String telefone = reader.readLine();
-
-                            id_doente = bd.insertDoente(nome, telefone, numUtente, morada);
-                        } else id_doente = bd.getIdDoente(numUtente);
-                        System.out.println("-- Insira a sigla do tipo de Exame.");
-                        String siglaExame = reader.readLine();
-                        System.out.println("-- Insira uma descrição acerca do exame. (opcional)");
-                        String descricao = reader.readLine();
-
-                        int id_exame = bd.insertExame(siglaExame);
-                        int id_pedido = bd.insertPedido(id_exame, id_doente, descricao);
-                        bd.insertWorklist(id_pedido,0);
-                        break;
-                    case 2:
                         bd.showPedidos();
                         break;
-                    case 3:
-                        System.out.println("-- Insira o número do Pedido do qual pretende consultar o Relatório.");
+                    case 2:
+                        System.out.println("-- Insira o número do Pedido de Exame do qual pretende consultar o Relatório.");
                         String id_Pedido = reader.readLine();
                         bd.showRelatorio(id_Pedido);
-                    case 4:
-                        System.out.println("-- Insira o número do Pedido a cancelar.");
+                        break;
+                    case 3:
+                        System.out.println("-- Insira o número do Pedido de Exame a realizar.");
                         String num_Pedido = reader.readLine();
-                        if (bd.cancelarPedido(num_Pedido)){
-                            System.out.println("Pedido Cancelado com sucesso!");
-                            bd.insertWorklist(Integer.parseInt(num_Pedido),2);
+                        System.out.println("---- Insira o número de Episódio da Consulta a iniciar.");
+                        String num_ep = reader.readLine();
+                        if (bd.realizarPedido(num_Pedido,num_ep)){
+                            System.out.println("Exame em curso!");
+                            System.out.println("---- Insira o Relatório do Exame realizado.");
+                            String relatorio = reader.readLine();
+                            bd.insertRelatorio(num_Pedido,relatorio);
+                            bd.insertWorklist(Integer.parseInt(num_Pedido),1);
+                            System.out.println("Exame Realizado com sucesso!");
                         }
                         else System.out.println("Operação inválida!");
                         break;

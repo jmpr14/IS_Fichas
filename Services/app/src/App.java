@@ -20,6 +20,10 @@ public class App {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int op = -1;
 
+        System.out.println("\n--------------------------------------------------------------");
+        System.out.println("------------------------ SERVICES APP ------------------------");
+        System.out.println("--------------------------------------------------------------");
+
         while (op != 0) {
 
             System.out.println("\n> INDIQUE O NÚMERO DA OPERAÇÃO PRETENDIDA:");
