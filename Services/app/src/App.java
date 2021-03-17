@@ -88,7 +88,7 @@ public class App {
 
                         ORM_O01 _adtMessage;
                         _adtMessage = Build(numUtente, id_pedido, nome, morada, telefone, descricao, siglaExame);
-                        writeMessageToFile(pipeParser, _adtMessage, "./logs/"+numUtente+".txt");
+                        writeMessageToFile(pipeParser, _adtMessage, "./logs/"+id_pedido+".txt");
                         break;
                     case 2:
                         bd.showPedidos();
