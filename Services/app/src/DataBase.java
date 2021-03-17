@@ -5,7 +5,7 @@ public class DataBase {
     private final String pass;
 
     public DataBase(String pass) {
-        this.pass = "root";
+        this.pass = pass;
     }
 
     public boolean checkDoente(String numUtente) {
