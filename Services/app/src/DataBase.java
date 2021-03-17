@@ -111,6 +111,76 @@ public class DataBase {
         return a;
     }
 
+
+    public String getNomeIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select nome from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public String getMoradaIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select morada from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public String getTelefoneIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select telefone from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
     public int insertPedido(int id_exame, int id_doente, String descricao) {
         int a = 0;
         try {
