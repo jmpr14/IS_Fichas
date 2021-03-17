@@ -5,7 +5,7 @@ public class DataBase {
     private final String pass;
 
     public DataBase(String pass) {
-        this.pass = pass;
+        this.pass = "root";
     }
 
     public boolean checkDoente(String numUtente) {
@@ -83,7 +83,7 @@ public class DataBase {
             conn.close();
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("teste " +e.getMessage());
         }
         return a;
     }

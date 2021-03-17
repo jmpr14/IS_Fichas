@@ -87,8 +87,8 @@ public class App {
                         bd.insertWorklist(id_pedido,0);
 
                         ORM_O01 _adtMessage;
-                        _adtMessage = Build(numUtente, nome, morada, telefone, descricao);
-                        writeMessageToFile(pipeParser, _adtMessage, numUtente+".txt");
+                        _adtMessage = Build(numUtente, id_pedido, nome, morada, telefone, descricao, siglaExame);
+                        writeMessageToFile(pipeParser, _adtMessage, "./logs/"+numUtente+".txt");
                         break;
                     case 2:
                         bd.showPedidos();
@@ -119,27 +119,28 @@ public class App {
     }
 
 
-    public static ORM_O01 Build(String numPaciente, String nome, String morada, String telefone, String descricao)
+    public static ORM_O01 Build(String numPaciente, int id_pedido, String nome, String morada, String telefone, String descricao, String siglaExame)
             throws HL7Exception, IOException {
         String currentDateTimeString = getCurrentTimeStamp();
-        ORM_O01 _adtMessage = new ORM_O01();
+        ORM_O01 _ormMessage = new ORM_O01();
         //you can use the context class's newMessage method to instantiate a message if you want
-        _adtMessage.initQuickstart("ORM", "O01", "P");
-        createMshSegment(_adtMessage,currentDateTimeString);
-        createPidSegment(_adtMessage, numPaciente, nome, morada, telefone);
-        createPv1Segment(_adtMessage);
-        createOBRSegment(_adtMessage, descricao);
-        return _adtMessage;
+        _ormMessage.initQuickstart("ORM", "O01", "P");
+        createMshSegment(_ormMessage,currentDateTimeString);
+        createPidSegment(_ormMessage, numPaciente, nome, morada, telefone);
+        createPv1Segment(_ormMessage);
+        createORCSegment(_ormMessage, id_pedido);
+        createOBRSegment(_ormMessage, descricao, id_pedido, siglaExame);
+        return _ormMessage;
     }
 
     public static void createMshSegment(ORM_O01 t,String currentDateTimeString) throws DataTypeException {
         MSH mshSegment = t.getMSH();
         mshSegment.getFieldSeparator().setValue("|");
         mshSegment.getEncodingCharacters().setValue("^~\\&");
-        mshSegment.getSendingApplication().getNamespaceID().setValue("Services");
-        mshSegment.getSendingFacility().getNamespaceID().setValue("Services");
-        mshSegment.getReceivingApplication().getNamespaceID().setValue("Medic");
-        mshSegment.getReceivingFacility().getNamespaceID().setValue("Medic");
+        mshSegment.getSendingApplication().getNamespaceID().setValue("desk_services");
+        mshSegment.getSendingFacility().getNamespaceID().setValue("desk_services");
+        mshSegment.getReceivingApplication().getNamespaceID().setValue("desk_medic");
+        mshSegment.getReceivingFacility().getNamespaceID().setValue("desk_medic");
         mshSegment.getDateTimeOfMessage().getTimeOfAnEvent().setValue(currentDateTimeString);
         mshSegment.getMessageControlID().setValue(getSequenceNumber());
         mshSegment.getVersionID().getVersionID().setValue("2.4");
@@ -175,11 +176,27 @@ public class App {
         pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
-    public static void createOBRSegment(ORM_O01 t, String descricao) throws DataTypeException{
+    public static void createORCSegment(ORM_O01 t, int id_pedido) throws DataTypeException{
+        ORC orc = t.getORDER().getORC();
+        orc.getOrc1_OrderControl().setValue("NW");
+        String id_pedidoS = Integer.toString(id_pedido);
+        orc.getOrc2_PlacerOrderNumber().getNamespaceID().setValue(id_pedidoS);
+        orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(id_pedidoS);
+        orc.getOrc9_DateTimeOfTransaction().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
+        orc.getOrc10_EnteredBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
+        orc.getOrc11_VerifiedBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
+        orc.getOrc15_OrderEffectiveDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
+        orc.getOrc19_ActionBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
+    }
+
+    public static void createOBRSegment(ORM_O01 t, String descricao, int id_pedido, String siglaExame) throws DataTypeException{
         OBR obr = t.getORDER().getORDER_DETAIL().getOBR();
-        obr.getSetIDOBR().setValue("43");
-        obr.getPlacerOrderNumber().getNamespaceID().setValue("7890");
+        String id_pedidoS = Integer.toString(id_pedido);
+        obr.getObr1_SetIDOBR().setValue(id_pedidoS);
+        obr.getPlacerOrderNumber().getNamespaceID().setValue("4727374");
+        obr.getFillerOrderNumber().getNamespaceID().setValue("4727374");
         obr.getObr13_RelevantClinicalInfo().setValue(descricao);
+        obr.getObr44_ProcedureCode().getAlternateIdentifier().setValue(siglaExame);
 
     }
 
