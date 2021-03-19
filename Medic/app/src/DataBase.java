@@ -126,6 +126,202 @@ public class DataBase {
         return a;
     }
 
+
+    public String getIdDoenteIdPedido(String id_pedido) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+
+            String sql = "select Doente_id_doente from Pedido WHERE id_pedido = " + id_pedido + ";";
+            System.out.println(sql);
+
+            ResultSet rss = select.executeQuery(sql);
+
+            rss.next();
+            a = rss.getString(1);
+            System.out.println("a: " +a);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getNumUtenteIdDoente(String id_doente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select num_utente from Doente where id_doente=" + id_doente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getNomeIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select nome from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public String getMoradaIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select morada from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+    public String getTelefoneIdDoente(String num_utente) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select telefone from Doente where num_utente=" + num_utente + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getDescricaoIdPedido(String id_pedido) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select descricao from pedido where id_pedido=" + id_pedido + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getIDExameIDPedido(String id_pedido) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select Exame_id_exame from pedido where id_pedido=" + id_pedido + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getSiglaExameIDExame(String id_exame) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select sigla from exame where id_exame=" + id_exame + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
     public void insertRelatorio(String id_pedido, String relatorio) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
