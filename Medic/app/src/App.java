@@ -82,13 +82,13 @@ public class App {
                             String descricao = bd.getDescricaoIdPedido(num_Pedido);
                             String id_exame = bd.getIDExameIDPedido(num_Pedido);
                             String siglaExame = bd.getSiglaExameIDExame(id_exame);
-
+/*
                             System.out.println("id_doente: "+id_doente + "\nnumUtente: " + numUtente + "\nnum_Pedido: "
                                     + num_Pedido + "\nnome: " + nome + "\nmorada: " + morada + "\n telefone " +
-                                    telefone + "\ndescricao: " + descricao + "\n sigla: " + siglaExame);
+                                    telefone + "\ndescricao: " + descricao + "\n sigla: " + siglaExame);*/
 
                             ORM_O01 _adtMessage;
-                            _adtMessage = Build(numUtente, num_Pedido, nome, morada, telefone, descricao, siglaExame);
+                            _adtMessage = Build(numUtente, num_Pedido, nome, morada, telefone, descricao, siglaExame, relatorio);
                             writeMessageToFile(pipeParser, _adtMessage, "./logs/"+num_Pedido+".txt");
                         }
                         else System.out.println("Operação inválida!");
@@ -106,7 +106,8 @@ public class App {
     }
 
 
-    public static ORM_O01 Build(String numPaciente, String id_pedido, String nome, String morada, String telefone, String descricao, String siglaExame)
+    public static ORM_O01 Build(String numPaciente, String id_pedido, String nome, String morada, String telefone,
+                                String descricao, String siglaExame, String relatorio)
             throws HL7Exception, IOException {
         String currentDateTimeString = getCurrentTimeStamp();
         ORM_O01 _ormMessage = new ORM_O01();
@@ -114,9 +115,18 @@ public class App {
         _ormMessage.initQuickstart("ORM", "O01", "P");
         createMshSegment(_ormMessage,currentDateTimeString);
         createPidSegment(_ormMessage, numPaciente, nome, morada, telefone);
-        createPv1Segment(_ormMessage);
+        //createPv1Segment(_ormMessage);
         createORCSegment(_ormMessage, id_pedido);
         createOBRSegment(_ormMessage, descricao, id_pedido, siglaExame);
+        createOBX1segment(_ormMessage, siglaExame);
+        createOBX2segment(_ormMessage);
+
+        String[] tokens = relatorio.split("\\.");
+        int i = 2;
+        for(String token : tokens){
+            createOBXisegment(_ormMessage, i, token);
+            i++;
+        }
         return _ormMessage;
     }
 
@@ -165,7 +175,7 @@ public class App {
 
     public static void createORCSegment(ORM_O01 t, String id_pedido) throws DataTypeException{
         ORC orc = t.getORDER().getORC();
-        orc.getOrc1_OrderControl().setValue("SC");
+        orc.getOrc1_OrderControl().setValue("RE");
         //String id_pedidoS = Integer.toString(id_pedido);
         orc.getOrc2_PlacerOrderNumber().getNamespaceID().setValue(id_pedido);
         orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(id_pedido);
@@ -185,6 +195,35 @@ public class App {
         obr.getObr13_RelevantClinicalInfo().setValue(descricao);
         obr.getObr44_ProcedureCode().getAlternateIdentifier().setValue(siglaExame);
 
+    }
+
+    public static void createOBX1segment(ORM_O01 t, String siglaExame) throws DataTypeException {
+        OBX obx = t.getORDER().getORDER_DETAIL().getOBSERVATION(0).getOBX();
+        obx.getObx1_SetIDOBX().setValue("1");
+        obx.getObx2_ValueType().setValue("TX");
+        obx.getObx3_ObservationIdentifier().getCe1_Identifier().setValue(siglaExame);
+        obx.getObx11_ObservationResultStatus().setValue("F");
+        obx.getObx19_DateTimeOfTheAnalysis().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
+    }
+
+
+    public static void createOBX2segment(ORM_O01 t) throws DataTypeException {
+        OBX obx = t.getORDER().getORDER_DETAIL().getOBSERVATION(1).getOBX();
+        obx.getObx1_SetIDOBX().setValue("2");
+        obx.getObx2_ValueType().setValue("TX");
+        obx.getObx3_ObservationIdentifier().getCe1_Identifier().setValue("RELATORIO:");
+        obx.getObx11_ObservationResultStatus().setValue("F");
+        obx.getObx19_DateTimeOfTheAnalysis().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
+    }
+
+    public static void createOBXisegment(ORM_O01 t, int i, String relatorio) throws DataTypeException {
+        OBX obx = t.getORDER().getORDER_DETAIL().getOBSERVATION(i).getOBX();
+        int j = i+1;
+        obx.getObx1_SetIDOBX().setValue(String.valueOf(j));
+        obx.getObx2_ValueType().setValue("TX");
+        obx.getObx3_ObservationIdentifier().getCe1_Identifier().setValue(relatorio);
+        obx.getObx11_ObservationResultStatus().setValue("F");
+        obx.getObx19_DateTimeOfTheAnalysis().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
     public static String getCurrentTimeStamp() {

@@ -140,13 +140,13 @@ public class DataBase {
 
 
             String sql = "select Doente_id_doente from Pedido WHERE id_pedido = " + id_pedido + ";";
-            System.out.println(sql);
+            //System.out.println(sql);
 
             ResultSet rss = select.executeQuery(sql);
 
             rss.next();
             a = rss.getString(1);
-            System.out.println("a: " +a);
+            //System.out.println("a: " +a);
             conn.close();
 
         } catch (Exception e) {
