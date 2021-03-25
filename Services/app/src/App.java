@@ -1,15 +1,12 @@
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v24.datatype.*;
-import ca.uhn.hl7v2.model.v24.message.ADT_A01;
 import ca.uhn.hl7v2.model.v24.message.ORM_O01;
 import ca.uhn.hl7v2.model.v24.segment.*;
 import ca.uhn.hl7v2.parser.Parser;
 
 import ca.uhn.hl7v2.DefaultHapiContext;
-import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.HapiContext;
-import ca.uhn.hl7v2.model.v24.message.ADT_A01;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -97,6 +94,7 @@ public class App {
                         System.out.println("-- Insira o número do Pedido do qual pretende consultar o Relatório.");
                         String id_Pedido = reader.readLine();
                         bd.showRelatorio(id_Pedido);
+                        break;
                     case 4:
                         System.out.println("-- Insira o número do Pedido a cancelar.");
                         String num_Pedido = reader.readLine();
