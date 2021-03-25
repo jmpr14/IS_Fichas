@@ -87,7 +87,7 @@ public class App {
                         bd.insertWorklist(id_pedido,0);
 
                         ORM_O01 _adtMessage;
-                        _adtMessage = Build(numUtente, id_pedido, nome, morada, telefone, descricao, siglaExame);
+                        _adtMessage = Build(numUtente, id_pedido, nome, morada, telefone, descricao, siglaExame, "NW");
                         writeMessageToFile(pipeParser, _adtMessage, "./logs/"+id_pedido+".txt");
                         break;
                     case 2:
@@ -103,6 +103,21 @@ public class App {
                         if (bd.cancelarPedido(num_Pedido)){
                             System.out.println("Pedido Cancelado com sucesso!");
                             bd.insertWorklist(Integer.parseInt(num_Pedido),2);
+
+                            String iddoente = bd.getIdDoenteIdPedido(num_Pedido);
+                            String numeroutente = bd.getNumUtenteIdDoente(iddoente);
+                            String nomeutente = bd.getNomeIdDoente(numeroutente);
+                            String telefoneutente = bd.getTelefoneIdDoente(numeroutente);
+                            String moradautente = bd.getMoradaIdDoente(numeroutente);
+                            String idexame =bd.getIDExameIDPedido(num_Pedido);
+                            String siglaexame_ = bd.getSiglaExameIDExame(idexame);
+                            String descricao_ = bd.getDescricaoIdPedido(num_Pedido);
+
+                            ORM_O01 _cancelmessage;
+                            int numPedido_ = Integer.parseInt(num_Pedido);
+                            _cancelmessage = Build(numeroutente, numPedido_, nomeutente, moradautente,
+                                    telefoneutente, descricao_, siglaexame_, "CA");
+                            writeMessageToFile(pipeParser, _cancelmessage, "./cancel/"+num_Pedido+".txt");
                         }
                         else System.out.println("Operação inválida!");
                         break;
@@ -119,7 +134,9 @@ public class App {
     }
 
 
-    public static ORM_O01 Build(String numPaciente, int id_pedido, String nome, String morada, String telefone, String descricao, String siglaExame)
+
+    public static ORM_O01 Build(String numPaciente, int id_pedido, String nome, String morada, String telefone,
+                                String descricao, String siglaExame, String orcCode)
             throws HL7Exception, IOException {
         String currentDateTimeString = getCurrentTimeStamp();
         ORM_O01 _ormMessage = new ORM_O01();
@@ -128,7 +145,7 @@ public class App {
         createMshSegment(_ormMessage,currentDateTimeString);
         createPidSegment(_ormMessage, numPaciente, nome, morada, telefone);
         createPv1Segment(_ormMessage);
-        createORCSegment(_ormMessage, id_pedido);
+        createORCSegment(_ormMessage, id_pedido, orcCode);
         createOBRSegment(_ormMessage, descricao, id_pedido, siglaExame);
         return _ormMessage;
     }
@@ -176,9 +193,9 @@ public class App {
         pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
-    public static void createORCSegment(ORM_O01 t, int id_pedido) throws DataTypeException{
+    public static void createORCSegment(ORM_O01 t, int id_pedido, String orcCode) throws DataTypeException{
         ORC orc = t.getORDER().getORC();
-        orc.getOrc1_OrderControl().setValue("NW");
+        orc.getOrc1_OrderControl().setValue(orcCode);
         String id_pedidoS = Integer.toString(id_pedido);
         orc.getOrc2_PlacerOrderNumber().getNamespaceID().setValue(id_pedidoS);
         orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(id_pedidoS);
