@@ -88,7 +88,7 @@ public class App {
                                     telefone + "\ndescricao: " + descricao + "\n sigla: " + siglaExame);*/
 
                             ORM_O01 _adtMessage;
-                            _adtMessage = Build(numUtente, num_Pedido, nome, morada, telefone, descricao, siglaExame, relatorio);
+                            _adtMessage = Build(numUtente, num_Pedido, num_ep, nome, morada, telefone, descricao, siglaExame, relatorio);
                             writeMessageToFile(pipeParser, _adtMessage, "./logs/"+num_Pedido+".txt");
                         }
                         else System.out.println("Operação inválida!");
@@ -106,7 +106,7 @@ public class App {
     }
 
 
-    public static ORM_O01 Build(String numPaciente, String id_pedido, String nome, String morada, String telefone,
+    public static ORM_O01 Build(String numPaciente, String id_pedido, String num_ep, String nome, String morada, String telefone,
                                 String descricao, String siglaExame, String relatorio)
             throws HL7Exception, IOException {
         String currentDateTimeString = getCurrentTimeStamp();
@@ -116,7 +116,7 @@ public class App {
         createMshSegment(_ormMessage,currentDateTimeString);
         createPidSegment(_ormMessage, numPaciente, nome, morada, telefone);
         //createPv1Segment(_ormMessage);
-        createORCSegment(_ormMessage, id_pedido);
+        createORCSegment(_ormMessage, id_pedido, num_ep);
         createOBRSegment(_ormMessage, descricao, id_pedido, siglaExame);
         createOBX1segment(_ormMessage, siglaExame);
         createOBX2segment(_ormMessage);
@@ -173,12 +173,12 @@ public class App {
         pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
-    public static void createORCSegment(ORM_O01 t, String id_pedido) throws DataTypeException{
+    public static void createORCSegment(ORM_O01 t, String id_pedido, String num_ep) throws DataTypeException{
         ORC orc = t.getORDER().getORC();
         orc.getOrc1_OrderControl().setValue("RE");
         //String id_pedidoS = Integer.toString(id_pedido);
         orc.getOrc2_PlacerOrderNumber().getNamespaceID().setValue(id_pedido);
-        orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(id_pedido);
+        orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(num_ep);
         orc.getOrc9_DateTimeOfTransaction().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
         orc.getOrc10_EnteredBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_medic");
         orc.getOrc11_VerifiedBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_medic");
