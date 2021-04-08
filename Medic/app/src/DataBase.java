@@ -8,6 +8,32 @@ public class DataBase {
         this.pass = pass;
     }
 
+    public boolean checkWorklist(Integer idPedido) {
+        boolean a = true;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement stmt = conn.createStatement();
+
+            String sql = "select * from Worklist where Pedido_id_pedido=" + idPedido + ";";
+            ResultSet rss = stmt.executeQuery(sql);
+
+            if (!rss.next()) a = false;
+            conn.close();
+
+            return a;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
     public void showPedidos() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -333,7 +359,8 @@ public class DataBase {
             Statement select = conn.createStatement();
 
             String sql = "select Exame_id_exame from Pedido WHERE id_pedido = " + id_pedido + ";";
-            ResultSet rss = select.executeQuery(sql); rss.next();
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
             int id_exame = rss.getInt(1);
 
             Statement stmt = conn.createStatement();
@@ -354,14 +381,18 @@ public class DataBase {
                     getConnection("jdbc:mysql://localhost:3306/desk_medic?user=root&password="
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
-            Statement stmt = conn.createStatement();
-            stmt.execute("insert into Worklist values(0,\"" + id_pedido + "\", NOW(), \"" + alteracao + "\");");
-            conn.close();
+            if (checkWorklist(id_pedido)) {
+                Statement stmt = conn.createStatement();
+                stmt.execute("update Worklist set alteracao = " + alteracao + " where Pedido_id_pedido = " + id_pedido + " ;");
+                conn.close();
+            } else {
+                Statement stmt = conn.createStatement();
+                stmt.execute("insert into Worklist values(0,\"" + id_pedido + "\", NOW(), \"" + alteracao + "\");");
+                conn.close();
+            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
-
 }
