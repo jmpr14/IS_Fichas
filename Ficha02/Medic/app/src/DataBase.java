@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DataBase {
 
@@ -43,33 +47,61 @@ public class DataBase {
                             + this.pass + "&useTimezone=true&serverTimezone=UTC");
 
             Statement stmt = conn.createStatement();
+            ResultSet rs;
+            int columnsNumber;
 
-            ResultSet rs = stmt.executeQuery("select * from Pedido");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("-- 1 - ver todos.");
+            System.out.println("-- 2 - consultar pedidos para hoje.");
+            System.out.println("-- 3 - consultar pedidos de uma data específica.");
 
-            ResultSetMetaData rsmd = rs.getMetaData();
+            int input = Integer.parseInt(reader.readLine());
+            if(input==3){
+                System.out.println("-- Insira a data que pretende consultar, no formato yyyy-mm-dd.");
+                String dia = reader.readLine();
+
+                rs = stmt.executeQuery("SELECT id_pedido, num_ep, estado, Exame_id_exame, Doente_id_doente, data, hora, descricao FROM Pedido, Exame WHERE Pedido.Exame_id_exame = Exame.id_exame AND Exame.data = \"" + dia + "\";");
+                ResultSetMetaData rsmd = rs.getMetaData();
+                columnsNumber = rsmd.getColumnCount();
+            }
+            else if(input==2){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String today = LocalDate.now().format(formatter);
+                System.out.println(today);
+
+                rs = stmt.executeQuery("SELECT id_pedido, num_ep, estado, Exame_id_exame, Doente_id_doente, data, hora, descricao FROM Pedido, Exame WHERE Pedido.Exame_id_exame = Exame.id_exame AND Exame.data = \"" + today + "\";");
+                ResultSetMetaData rsmd = rs.getMetaData();
+                columnsNumber = rsmd.getColumnCount();
+            }
+            else{
+                System.out.println();
+                rs = stmt.executeQuery("SELECT id_pedido, num_ep, estado, Exame_id_exame, Doente_id_doente, data, hora, descricao FROM Pedido, Exame WHERE Pedido.Exame_id_exame = Exame.id_exame;");
+                ResultSetMetaData rsmd = rs.getMetaData();
+                columnsNumber = rsmd.getColumnCount();
+            }
 
             System.out.println("-----------------------------------------------------------------------------------------------");
-            System.out.println("| PEDIDO |      DATETIME      |EPISÓDIO|   ESTADO   |  EXAME  |     PACIENTE    |  DESCRIÇÂO");
-            int columnsNumber = rsmd.getColumnCount();
+            System.out.println("| PEDIDO |EPISÓDIO|   ESTADO   |  EXAME  |     PACIENTE     |     DATA     |     HORA    | DESCRIÇÃO");
+
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i == 1) System.out.print("    ");
-                    else System.out.print("     ");
+                    if (i == 1) System.out.print("     ");
+                    else System.out.print("      ");
                     String columnValue = rs.getString(i);
                     switch (i) {
-                        case 4:
+                        case 3:
                             if (Integer.parseInt(columnValue) == 0) System.out.print("Em espera");
                             else if (Integer.parseInt(columnValue) == 1) System.out.print("Realizado");
                             else System.out.print("Cancelado");
                             break;
-                        case 5:
+                        case 4:
                             int id_Exame = Integer.parseInt(columnValue);
                             Statement media1 = conn.createStatement();
                             ResultSet rss1 = media1.executeQuery("select sigla from Exame where id_exame=" + id_Exame + ";");
                             rss1.next();
                             System.out.print(rss1.getString(1));
                             break;
-                        case 6:
+                        case 5:
                             int id_Doente = Integer.parseInt(columnValue);
                             Statement media2 = conn.createStatement();
                             ResultSet rss2 = media2.executeQuery("select nome from Doente where id_doente=" + id_Doente + ";");

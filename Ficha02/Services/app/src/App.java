@@ -1,13 +1,3 @@
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v24.datatype.*;
-import ca.uhn.hl7v2.model.v24.message.ORM_O01;
-import ca.uhn.hl7v2.model.v24.segment.*;
-import ca.uhn.hl7v2.parser.Parser;
-
-import ca.uhn.hl7v2.DefaultHapiContext;
-import ca.uhn.hl7v2.HapiContext;
-
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +8,7 @@ public class App {
     public static void main(String[] args) {
 
         String pass = "";
+
         try {
             FileReader arq = new FileReader("configs.txt");
             BufferedReader lerArq = new BufferedReader(arq);
@@ -26,9 +17,6 @@ public class App {
             System.out.println(e.getMessage());
         }
         DataBase bd = new DataBase(pass);
-
-        HapiContext context = new DefaultHapiContext();
-        Parser pipeParser = context.getPipeParser();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         int op = -1;
@@ -68,6 +56,7 @@ public class App {
                             telefone = reader.readLine();
 
                             id_doente = bd.insertDoente(nome, telefone, numUtente, morada);
+
                         } else {
                             id_doente = bd.getIdDoente(numUtente);
                             nome = bd.getNomeIdDoente(numUtente);
@@ -76,16 +65,21 @@ public class App {
                         }
                         System.out.println("-- Insira a sigla do tipo de Exame.");
                         String siglaExame = reader.readLine();
+
+                        System.out.println("-- Insira o dia que pretende para marcar o exame, no formato yyyy-mm-dd.");
+                        String dataExame = reader.readLine();
+                        System.out.println("-- Insira a hora que pretende para marcar o exame, no formato hh:mm.");
+                        String horaExame = reader.readLine();
+
                         System.out.println("-- Insira uma descrição acerca do exame. (opcional)");
                         String descricao = reader.readLine();
 
-                        int id_exame = bd.insertExame(siglaExame);
+                        int id_exame = bd.insertExame(siglaExame, dataExame, horaExame);
                         int id_pedido = bd.insertPedido(id_exame, id_doente, descricao);
                         bd.insertWorklist(id_pedido,0);
 
-                        ORM_O01 _adtMessage;
-                        _adtMessage = Build(numUtente, id_pedido, nome, morada, telefone, descricao, siglaExame, "NW");
-                        writeMessageToFile(pipeParser, _adtMessage, "./logs/"+id_pedido+".txt");
+                        // escrever para JSON
+
                         break;
                     case 2:
                         bd.showPedidos();
@@ -111,11 +105,7 @@ public class App {
                             String siglaexame_ = bd.getSiglaExameIDExame(idexame);
                             String descricao_ = bd.getDescricaoIdPedido(num_Pedido);
 
-                            ORM_O01 _cancelmessage;
-                            int numPedido_ = Integer.parseInt(num_Pedido);
-                            _cancelmessage = Build(numeroutente, numPedido_, nomeutente, moradautente,
-                                    telefoneutente, descricao_, siglaexame_, "CA");
-                            writeMessageToFile(pipeParser, _cancelmessage, "./cancel/"+num_Pedido+".txt");
+                            // escrever para JSON
                         }
                         else System.out.println("Operação inválida!");
                         break;
@@ -131,7 +121,7 @@ public class App {
 
     }
 
-
+    /*
 
     public static ORM_O01 Build(String numPaciente, int id_pedido, String nome, String morada, String telefone,
                                 String descricao, String siglaExame, String orcCode)
@@ -179,7 +169,7 @@ public class App {
     public static void createPv1Segment(ORM_O01 t) throws DataTypeException {
         PV1 pv1 = t.getPATIENT().getPATIENT_VISIT().getPV1();
         pv1.getPatientClass().setValue("I"); // O to represent an 'Outpatient'
-        /*PL assignedPatientLocation = pv1.getAssignedPatientLocation();
+        PL assignedPatientLocation = pv1.getAssignedPatientLocation();
         assignedPatientLocation.getFacility().getNamespaceID().setValue("Some Treatment Facility Name");
         assignedPatientLocation.getPointOfCare().setValue("Some Point of Care");
         pv1.getAdmissionType().setValue("ALERT");
@@ -187,7 +177,7 @@ public class App {
         referringDoctor.getIDNumber().setValue("99999999");
         referringDoctor.getFamilyName().getSurname().setValue("Smith");
         referringDoctor.getGivenName().setValue("Jack");
-        referringDoctor.getIdentifierTypeCode().setValue("456789");*/
+        referringDoctor.getIdentifierTypeCode().setValue("456789");
         pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
@@ -251,4 +241,7 @@ public class App {
             }
         }
     }
+
+    */
+
 }

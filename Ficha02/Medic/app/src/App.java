@@ -1,15 +1,6 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.DataTypeException;
-import ca.uhn.hl7v2.model.v24.datatype.*;
-import ca.uhn.hl7v2.model.v24.message.ORM_O01;
-import ca.uhn.hl7v2.model.v24.segment.*;
-import ca.uhn.hl7v2.parser.Parser;
-
-import ca.uhn.hl7v2.DefaultHapiContext;
-import ca.uhn.hl7v2.HapiContext;
 
 
 public class App {
@@ -17,9 +8,6 @@ public class App {
     public static void main(String[] args) {
 
         String pass = "";
-
-        HapiContext context = new DefaultHapiContext();
-        Parser pipeParser = context.getPipeParser();
 
         try {
             FileReader arq = new FileReader("configs.txt");
@@ -82,14 +70,9 @@ public class App {
                             String descricao = bd.getDescricaoIdPedido(num_Pedido);
                             String id_exame = bd.getIDExameIDPedido(num_Pedido);
                             String siglaExame = bd.getSiglaExameIDExame(id_exame);
-/*
-                            System.out.println("id_doente: "+id_doente + "\nnumUtente: " + numUtente + "\nnum_Pedido: "
-                                    + num_Pedido + "\nnome: " + nome + "\nmorada: " + morada + "\n telefone " +
-                                    telefone + "\ndescricao: " + descricao + "\n sigla: " + siglaExame);*/
 
-                            ORM_O01 _adtMessage;
-                            _adtMessage = Build(numUtente, num_Pedido, num_ep, nome, morada, telefone, descricao, siglaExame, relatorio);
-                            writeMessageToFile(pipeParser, _adtMessage, "./logs/"+num_Pedido+".txt");
+                            // escrever para JSON
+
                         }
                         else System.out.println("Operação inválida!");
                         break;
@@ -105,7 +88,7 @@ public class App {
 
     }
 
-
+    /*
     public static ORM_O01 Build(String numPaciente, String id_pedido, String num_ep, String nome, String morada, String telefone,
                                 String descricao, String siglaExame, String relatorio)
             throws HL7Exception, IOException {
@@ -161,7 +144,7 @@ public class App {
     public static void createPv1Segment(ORM_O01 t) throws DataTypeException {
         PV1 pv1 = t.getPATIENT().getPATIENT_VISIT().getPV1();
         pv1.getPatientClass().setValue("I"); // O to represent an 'Outpatient'
-        /*PL assignedPatientLocation = pv1.getAssignedPatientLocation();
+        PL assignedPatientLocation = pv1.getAssignedPatientLocation();
         assignedPatientLocation.getFacility().getNamespaceID().setValue("Some Treatment Facility Name");
         assignedPatientLocation.getPointOfCare().setValue("Some Point of Care");
         pv1.getAdmissionType().setValue("ALERT");
@@ -169,7 +152,7 @@ public class App {
         referringDoctor.getIDNumber().setValue("99999999");
         referringDoctor.getFamilyName().getSurname().setValue("Smith");
         referringDoctor.getGivenName().setValue("Jack");
-        referringDoctor.getIdentifierTypeCode().setValue("456789");*/
+        referringDoctor.getIdentifierTypeCode().setValue("456789");
         pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
     }
 
@@ -262,4 +245,6 @@ public class App {
             }
         }
     }
+
+     */
 }
