@@ -519,4 +519,52 @@ public class DataBase {
         return a;
     }
 
+
+    public String getDataIdExame(String id_exame) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select data from exame where id_exame=" + id_exame + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
+
+    public String getHoraIdExame(String id_exame) {
+        String a = "";
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            Statement select = conn.createStatement();
+
+            String sql = "select hora from exame where id_exame=" + id_exame + ";";
+            ResultSet rss = select.executeQuery(sql);
+            rss.next();
+            a = rss.getString(1);
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return a;
+    }
+
 }

@@ -1,3 +1,5 @@
+import org.json.JSONObject;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,7 +80,30 @@ public class App {
                         int id_pedido = bd.insertPedido(id_exame, id_doente, descricao);
                         bd.insertWorklist(id_pedido,0);
 
+                        JSONObject jo = new JSONObject();
                         // escrever para JSON
+                        jo.put("id_doente", Integer.toString(id_doente));
+                        jo.put("numUtente", numUtente);
+                        jo.put("tipo", "NW");
+                        jo.put("nome", nome);
+                        jo.put("morada", morada);
+                        jo.put("telefone", telefone);
+                        jo.put("id_exame", Integer.toString(id_exame));
+                        jo.put("siglaExame", siglaExame);
+                        jo.put("dataExame", dataExame);
+                        jo.put("horaExame", horaExame);
+                        jo.put("id_pedido", Integer.toString(id_pedido));
+                        jo.put("descricao", descricao);
+
+                        try (FileWriter file = new FileWriter("./logs/"+id_pedido+".json")) {
+
+                            file.write(jo.toString());
+                            //System.out.println("Successfully Copied JSON Object to File...");
+                            //System.out.println("\nJSON Object: " + jo);
+
+                            file.flush();
+                            file.close();
+                        }
 
                         break;
                     case 2:
@@ -104,8 +129,34 @@ public class App {
                             String idexame =bd.getIDExameIDPedido(num_Pedido);
                             String siglaexame_ = bd.getSiglaExameIDExame(idexame);
                             String descricao_ = bd.getDescricaoIdPedido(num_Pedido);
+                            String data_exame = bd.getDataIdExame(idexame);
+                            String hora_exame = bd.getHoraIdExame(idexame);
 
                             // escrever para JSON
+                            JSONObject cancel = new JSONObject();
+                            // escrever para JSON
+                            cancel.put("id_doente", iddoente);
+                            cancel.put("numUtente", numeroutente);
+                            cancel.put("tipo", "CA");
+                            cancel.put("nome", nomeutente);
+                            cancel.put("morada", moradautente);
+                            cancel.put("telefone", telefoneutente);
+                            cancel.put("id_exame", idexame);
+                            cancel.put("siglaExame", siglaexame_);
+                            cancel.put("dataExame", data_exame);
+                            cancel.put("horaExame", hora_exame);
+                            cancel.put("id_pedido", num_Pedido);
+                            cancel.put("descricao", descricao_);
+
+                            try (FileWriter file = new FileWriter("./cancel/"+num_Pedido+".json")) {
+
+                                file.write(cancel.toString());
+                                //System.out.println("Successfully Copied JSON Object to File...");
+                                //System.out.println("\nJSON Object: " + cancel);
+
+                                file.flush();
+                                file.close();
+                            }
                         }
                         else System.out.println("Operação inválida!");
                         break;
@@ -117,131 +168,5 @@ public class App {
                 System.out.println(e.getMessage());
             }
         }
-
-
     }
-
-    /*
-
-    public static ORM_O01 Build(String numPaciente, int id_pedido, String nome, String morada, String telefone,
-                                String descricao, String siglaExame, String orcCode)
-            throws HL7Exception, IOException {
-        String currentDateTimeString = getCurrentTimeStamp();
-        ORM_O01 _ormMessage = new ORM_O01();
-        //you can use the context class's newMessage method to instantiate a message if you want
-        _ormMessage.initQuickstart("ORM", "O01", "P");
-        createMshSegment(_ormMessage,currentDateTimeString);
-        createPidSegment(_ormMessage, numPaciente, nome, morada, telefone);
-        createPv1Segment(_ormMessage);
-        createORCSegment(_ormMessage, id_pedido, orcCode);
-        createOBRSegment(_ormMessage, descricao, id_pedido, siglaExame);
-        return _ormMessage;
-    }
-
-    public static void createMshSegment(ORM_O01 t,String currentDateTimeString) throws DataTypeException {
-        MSH mshSegment = t.getMSH();
-        mshSegment.getFieldSeparator().setValue("|");
-        mshSegment.getEncodingCharacters().setValue("^~\\&");
-        mshSegment.getSendingApplication().getNamespaceID().setValue("desk_services");
-        mshSegment.getSendingFacility().getNamespaceID().setValue("desk_services");
-        mshSegment.getReceivingApplication().getNamespaceID().setValue("desk_medic");
-        mshSegment.getReceivingFacility().getNamespaceID().setValue("desk_medic");
-        mshSegment.getDateTimeOfMessage().getTimeOfAnEvent().setValue(currentDateTimeString);
-        mshSegment.getMessageControlID().setValue(getSequenceNumber());
-        mshSegment.getVersionID().getVersionID().setValue("2.4");
-    }
-
-    public static void createPidSegment(ORM_O01 t, String numPaciente, String nome, String morada, String telefone) throws DataTypeException {
-        PID pid = t.getPATIENT().getPID();
-        XPN patientName = pid.getPatientName(0);
-        XTN patientTele = pid.getPhoneNumberHome(0);
-        patientTele.getPhoneNumber().setValue(telefone);
-        //patientName.getFamilyName().getSurname().setValue("Mouse");
-        patientName.getGivenName().setValue(nome);
-        pid.getPatientIdentifierList(0).getID().setValue(numPaciente);
-        XAD patientAddress = pid.getPatientAddress(0);
-        patientAddress.getStreetAddress().getStreetOrMailingAddress().setValue(morada);
-        //patientAddress.getCity().setValue("Lake Buena Vista");
-        patientAddress.getStateOrProvince().setValue("PT");
-        patientAddress.getCountry().setValue("PT");
-    }
-
-    public static void createPv1Segment(ORM_O01 t) throws DataTypeException {
-        PV1 pv1 = t.getPATIENT().getPATIENT_VISIT().getPV1();
-        pv1.getPatientClass().setValue("I"); // O to represent an 'Outpatient'
-        PL assignedPatientLocation = pv1.getAssignedPatientLocation();
-        assignedPatientLocation.getFacility().getNamespaceID().setValue("Some Treatment Facility Name");
-        assignedPatientLocation.getPointOfCare().setValue("Some Point of Care");
-        pv1.getAdmissionType().setValue("ALERT");
-        XCN referringDoctor = pv1.getReferringDoctor(0);
-        referringDoctor.getIDNumber().setValue("99999999");
-        referringDoctor.getFamilyName().getSurname().setValue("Smith");
-        referringDoctor.getGivenName().setValue("Jack");
-        referringDoctor.getIdentifierTypeCode().setValue("456789");
-        pv1.getAdmitDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
-    }
-
-    public static void createORCSegment(ORM_O01 t, int id_pedido, String orcCode) throws DataTypeException{
-        ORC orc = t.getORDER().getORC();
-        orc.getOrc1_OrderControl().setValue(orcCode);
-        String id_pedidoS = Integer.toString(id_pedido);
-        orc.getOrc2_PlacerOrderNumber().getNamespaceID().setValue(id_pedidoS);
-        orc.getOrc3_FillerOrderNumber().getNamespaceID().setValue(id_pedidoS);
-        orc.getOrc9_DateTimeOfTransaction().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
-        orc.getOrc10_EnteredBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
-        orc.getOrc11_VerifiedBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
-        orc.getOrc15_OrderEffectiveDateTime().getTimeOfAnEvent().setValue(getCurrentTimeStamp());
-        orc.getOrc19_ActionBy(0).getAssigningAuthority().getNamespaceID().setValue("desk_services");
-    }
-
-    public static void createOBRSegment(ORM_O01 t, String descricao, int id_pedido, String siglaExame) throws DataTypeException{
-        OBR obr = t.getORDER().getORDER_DETAIL().getOBR();
-        String id_pedidoS = Integer.toString(id_pedido);
-        obr.getObr1_SetIDOBR().setValue(id_pedidoS);
-        obr.getPlacerOrderNumber().getNamespaceID().setValue("4727374");
-        obr.getFillerOrderNumber().getNamespaceID().setValue("4727374");
-        obr.getObr13_RelevantClinicalInfo().setValue(descricao);
-        obr.getObr44_ProcedureCode().getAlternateIdentifier().setValue(siglaExame);
-
-    }
-
-    public static String getCurrentTimeStamp() {
-        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    }
-
-    public static String getSequenceNumber() {
-        String facilityNumberPrefix = "1234"; // some arbitrary prefix for the facility
-        return facilityNumberPrefix.concat(getCurrentTimeStamp());
-    }
-
-    private static void writeMessageToFile(Parser parser, ORM_O01 adtMessage, String outputFilename)
-            throws IOException, FileNotFoundException, HL7Exception {
-        OutputStream outputStream = null;
-        try {
-
-            // Remember that the file may not show special delimiter characters when using
-            // plain text editor
-            File file = new File(outputFilename);
-
-            // quick check to create the file before writing if it does not exist already
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            System.out.println("Serializing message to file...");
-            outputStream = new FileOutputStream(file);
-            outputStream.write(parser.encode(adtMessage).getBytes());
-            outputStream.flush();
-
-            System.out.printf("Message serialized to file '%s' successfully", file);
-            System.out.println("\n");
-        } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
-    }
-
-    */
-
 }

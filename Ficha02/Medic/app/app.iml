@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql-connector-java-8.0.22" level="project" />
-    <orderEntry type="library" name="hapi-base-2.2" level="project" />
+    <orderEntry type="library" name="json-20210307" level="project" />
   </component>
 </module>

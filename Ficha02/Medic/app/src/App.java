@@ -1,7 +1,8 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.lang.Object;
+import org.json.JSONObject;
 
 public class App {
 
@@ -71,7 +72,31 @@ public class App {
                             String id_exame = bd.getIDExameIDPedido(num_Pedido);
                             String siglaExame = bd.getSiglaExameIDExame(id_exame);
 
+                            JSONObject jo = new JSONObject();
                             // escrever para JSON
+                            jo.put("id_doente", id_doente);
+                            jo.put("numUtente", numUtente);
+                            jo.put("tipo", "RE");
+                            jo.put("nome", nome);
+                            jo.put("morada", morada);
+                            jo.put("telefone", telefone);
+                            jo.put("id_exame", id_exame);
+                            jo.put("siglaExame", siglaExame);
+                            jo.put("num_Pedido", num_Pedido);
+                            jo.put("num_Episodio", num_ep);
+                            jo.put("descricao", descricao);
+                            jo.put("relatorio", relatorio);
+
+                            //System.out.println(jo);
+                            try (FileWriter file = new FileWriter("./logs/"+num_Pedido+".json")) {
+
+                                file.write(jo.toString());
+                                System.out.println("Successfully Copied JSON Object to File...");
+                                System.out.println("\nJSON Object: " + jo);
+
+                                file.flush();
+                                file.close();
+                            }
 
                         }
                         else System.out.println("Operação inválida!");
