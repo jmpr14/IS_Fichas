@@ -1,7 +1,6 @@
 package aebd.group.webapp;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,126 +10,44 @@ import java.util.*;
 @RestController
 public class WelcomeController {
 
-	@GetMapping("/cpu")
-	public String cpu() {
-		GETCPU cpu = new GETCPU();
 
+	@PostMapping("/services")
+	public String enviaJson(){
+		String json = LerPasta.lerFicheiro();
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.cpu());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
-
-	@GetMapping("/datafile")
-	public String data() {
-		GETDataFile cpu = new GETDataFile();
-
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.datafile());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 		return json;
 	}
 
 
-	@GetMapping("/memory")
-	public String memory() {
-		GETMemory cpu = new GETMemory();
+	@PostMapping(
+			value = "/medic")
+	public void recebeJson(@RequestBody Map<String, Object> payload) {
 
+		System.out.println("Recebi dados");
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.memory());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
+		String horaExame = (String) payload.get("horaExame");
+		String tipo = (String) payload.get("tipo");
+		String telefone = (String) payload.get("telefone");
+		String siglaExame = (String) payload.get("siglaExame");
+		String dataExame = (String) payload.get("dataExame");
+		String numUtente = (String) payload.get("numUtente");
+		String nome = (String) payload.get("nome");
+		String id_exame = (String) payload.get("id_exame");
+		String id_pedido = (String) payload.get("id_pedido");
+		String id_doente = (String) payload.get("id_doente");
+		String morada = (String) payload.get("morada");
+		String descricao = (String) payload.get("descricao");
 
-	@GetMapping("/session")
-	public String session() {
-		GETSession cpu = new GETSession();
+		Pedido pedido = new Pedido(horaExame,tipo,telefone,siglaExame,dataExame,
+				numUtente,nome,id_exame,id_pedido,id_doente,morada,descricao);
 
+		RegistaPedido.guardaPedido(pedido);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.session());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
+		System.out.println(payload);
 
-	@GetMapping("/table")
-	public String table() {
-		GETTable cpu = new GETTable();
-
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.table());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
 	}
 
 
-	@GetMapping("/tablespace")
-	public String tablespace() {
-		GETTablespace cpu = new GETTablespace();
-
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(cpu.datafile());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
-
-	@GetMapping("/user")
-	public String user() {
-		GETUser user = new GETUser();
-
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json="{\"rows\": ";
-		try {
-			json += objectMapper.writeValueAsString(user.user());
-			json+="}";
-			System.out.println(json);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return json;
-	}
 
 
 

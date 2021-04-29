@@ -19,7 +19,7 @@ public class WebMvcConfiguration {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
-                                .allowedMethods("GET");
+                                .allowedMethods("POST");
             }
         };
     }
