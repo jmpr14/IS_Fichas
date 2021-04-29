@@ -24,9 +24,6 @@ public class CreatePost {
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());
             wr.write(linha.toString().getBytes());
-            Integer responseCode = httpConnection.getResponseCode();
-
-
 
         } catch (Exception e) {
             System.out.println("Error Message");
