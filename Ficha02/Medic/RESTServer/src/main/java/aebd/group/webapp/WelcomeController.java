@@ -11,15 +11,8 @@ import java.util.*;
 public class WelcomeController {
 
 
-	@PostMapping("/medic")
-	public String enviaJson(){
-		String json = LerPasta.lerFicheiro();
-
-		return json;
-	}
-
 	@PostMapping(
-			value = "/services")
+			value = "/medic")
 	public void recebeJson(@RequestBody Map<String, Object> payload) {
 
 		System.out.println("Recebi dados");

@@ -105,6 +105,8 @@ public class App {
                             file.close();
                         }
 
+                        CreatePost.sendJson(jo);
+
                         break;
                     case 2:
                         bd.showPedidos();
