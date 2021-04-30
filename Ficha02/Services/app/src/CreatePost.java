@@ -26,8 +26,6 @@ public class CreatePost {
             wr.write(linha.toString().getBytes());
             Integer responseCode = httpConnection.getResponseCode();
 
-
-
         } catch (Exception e) {
             System.out.println("Error Message");
             System.out.println(e.getClass().getSimpleName());

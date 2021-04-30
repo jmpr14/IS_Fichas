@@ -75,9 +75,9 @@ public class RegistaPedido {
             ResultSet rss = stmt.executeQuery(sql);
             rss.next();
 
+            Socket s = new Socket("localhost", 6666);
             if(rss.getInt(1)==1) {
                 try {
-                    Socket s = new Socket("localhost", 6666);
                     DataOutputStream dout = new DataOutputStream(s.getOutputStream());
                     dout.writeUTF(id_pedido);
                     dout.flush();

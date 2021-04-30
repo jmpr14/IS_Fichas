@@ -1,32 +1,40 @@
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Notificador extends Thread{
-    private final AtomicBoolean running;
+public class Notificador implements Runnable{
+    private volatile boolean running;
 
     public Notificador() {
-        running = new AtomicBoolean(false);
+        running = false;
     }
 
     public void stopThread() {
-        running.set(false);
+        running = false;
     }
 
     public void run() {
-        running.set(true);
+        running = true;
+        ServerSocket ss = null;
         try {
-            ServerSocket ss = new ServerSocket(6666);
-            while (running.get()) {
-                Socket s = ss.accept();//establishes connection
+            ss = new ServerSocket(6666);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        while (running) {
+            Socket s = null;
+            try {
+                s = ss.accept();//establishes connection
                 DataInputStream dis = new DataInputStream(s.getInputStream());
                 String str = dis.readUTF();
                 System.out.println("\nNOTIFICAÇÃO: Pedido " + str + " realizado!\n");
+            } catch (Exception e) {
+                try {
+                    s.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                e.printStackTrace();
             }
-            ss.close();
-        } catch (Exception e) {
-            Thread.currentThread().interrupt();
-            System.out.println(e.getMessage());
         }
     }
 

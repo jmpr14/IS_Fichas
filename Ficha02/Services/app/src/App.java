@@ -1,13 +1,13 @@
 import org.json.JSONObject;
 import java.io.*;
-import java.net.*;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 
         Notificador threadNotificador = new Notificador();
-        threadNotificador.start();
+        Thread t1 = new Thread(threadNotificador);
+        t1.start();
 
         String pass = "";
 
@@ -15,9 +15,11 @@ public class App {
             FileReader arq = new FileReader("configs.txt");
             BufferedReader lerArq = new BufferedReader(arq);
             pass = lerArq.readLine();
+            arq.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
         DataBase bd = new DataBase(pass);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -182,5 +184,6 @@ public class App {
             }
         }
         threadNotificador.stopThread();
+        t1.interrupt();
     }
 }
