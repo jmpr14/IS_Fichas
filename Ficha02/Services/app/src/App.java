@@ -102,6 +102,7 @@ public class App {
                             //System.out.println("\nJSON Object: " + jo);
 
                             file.flush();
+                            file.close();
                         }
 
                         CreatePost.sendJson(jo);
