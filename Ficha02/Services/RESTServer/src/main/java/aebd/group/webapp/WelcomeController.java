@@ -17,25 +17,27 @@ public class WelcomeController {
 
 		System.out.println("Recebi dados");
 
-		String horaExame = (String) payload.get("horaExame");
-		String tipo = (String) payload.get("tipo");
 		String telefone = (String) payload.get("telefone");
 		String siglaExame = (String) payload.get("siglaExame");
-		String dataExame = (String) payload.get("dataExame");
 		String numUtente = (String) payload.get("numUtente");
+		String numPedido = (String) payload.get("num_Pedido");
 		String nome = (String) payload.get("nome");
+		String relatorio = (String) payload.get("relatorio");
 		String id_exame = (String) payload.get("id_exame");
-		String id_pedido = (String) payload.get("id_pedido");
+		String num_Episodio = (String) payload.get("num_Episodio");
 		String id_doente = (String) payload.get("id_doente");
 		String morada = (String) payload.get("morada");
 		String descricao = (String) payload.get("descricao");
 
-		Pedido pedido = new Pedido(horaExame,tipo,telefone,siglaExame,dataExame,
-				numUtente,nome,id_exame,id_pedido,id_doente,morada,descricao);
+
+		Pedido pedido = new Pedido(telefone,siglaExame,numUtente,numPedido,nome,relatorio,
+				id_exame,num_Episodio,id_doente,morada,descricao);
 
 		RegistaPedido.guardaPedido(pedido);
 
 		System.out.println(payload);
+
+		EscreveFicheiro.escrever(payload.toString(),numPedido);
 
 	}
 

@@ -38,36 +38,39 @@ public class RegistaPedido {
             String selectDoente = "select * from doente where num_utente = '" + pedido.getNumUtente() + "';";
             ResultSet resultDoente = stmt.executeQuery(selectDoente);
             if(!resultDoente.next()){
-                String queryDoente = "insert into doente values (0,'" + pedido.getNumUtente() + "','" + pedido.getNome() + "','" + pedido.getTelefone() + "','" + pedido.getMorada() + "');";
+                String queryDoente = "insert into doente values (0,\"" + pedido.getNumUtente() + "\",\"" + pedido.getNome() + "\",\"" + pedido.getTelefone() + "\",\"" + pedido.getMorada() + "\");";
                 int result = stmt.executeUpdate(queryDoente);
             }
 
-            String queryExame = "insert into exame values (0,'','" + pedido.getSiglaExame() + "," + pedido.getDataExame() + ",\"" + pedido.getHoraExame() + "\"');";
+            int id_doente = 0;
+            String selectDoente1 = "select * from doente where num_utente = '" + pedido.getNumUtente() + "';";
+            ResultSet resultDoente1 = stmt.executeQuery(selectDoente1);
+            if(resultDoente1.next())
+                id_doente = resultDoente1.getInt(1);
+
+
+            String queryExame = "update exame set relatorio = + \"" + pedido.getRelatorio() + "\" where id_exame = " + pedido.getId_exame() + ";";
             int result1 = stmt.executeUpdate(queryExame);
 
-            int estado = 2;
-            if(pedido.getTipo().equals("NW")){
-                estado = 0;
 
-                String queryPedido = "insert into pedido values (" + pedido.getId_pedido() + "," + pedido.getDataExame() + ",0"
-                        + "," + estado + "," + pedido.getId_exame() + "," + pedido.getId_doente() + ",'" + pedido.getDescricao() + "');";
+            int estado = 1;
+            String id_pedido = pedido.getNumPedido();
 
-                int result2 = stmt.executeUpdate(queryPedido);
+            String queryPedido = "update pedido set estado = 1 where id_pedido = " + id_pedido + ";";
 
-                String selectPedido = "SELECT id_pedido FROM pedido ORDER BY id_pedido DESC LIMIT 1;";
-                ResultSet resultPedido = stmt.executeQuery(selectPedido);
+            int result2 = stmt.executeUpdate(queryPedido);
 
-                String queryWorklist = "insert into worklist values (0," + pedido.getId_pedido() + ",\"" + pedido.getDataExame() + " " + pedido.getHoraExame() + "\"," + estado + ");";
-                int result3 = stmt.executeUpdate(queryWorklist);
-            }
 
-            if (estado == 2) {
+            String queryPedido1 = "update pedido set Exame_id_exame = " + pedido.getId_exame() + " where id_pedido = " + id_pedido + ";";
 
-                String queryPedido1 = "update pedido set estado = 2 where id_pedido = " + pedido.getId_pedido() + ";";
+            int result4 = stmt.executeUpdate(queryPedido1);
 
-                int result5 = stmt.executeUpdate(queryPedido1);
 
-            }
+            String numep = pedido.getNum_Episodio();
+            String queryPedido2 = "update pedido set num_ep = " + numep + " where id_pedido = " + id_pedido + ";";
+
+            int result5 = stmt.executeUpdate(queryPedido2);
+
 
 
 //step5 close the connection object

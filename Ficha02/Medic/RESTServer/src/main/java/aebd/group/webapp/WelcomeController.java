@@ -37,6 +37,8 @@ public class WelcomeController {
 
 		System.out.println(payload);
 
+		EscreveFicheiro.escrever(payload.toString(),id_pedido);
+
 	}
 
 

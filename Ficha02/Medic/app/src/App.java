@@ -97,6 +97,7 @@ public class App {
                                 file.flush();
                                 file.close();
                             }
+                            CreatePost.sendJson(jo);
 
                         }
                         else System.out.println("Operação inválida!");

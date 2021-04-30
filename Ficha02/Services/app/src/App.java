@@ -157,6 +157,8 @@ public class App {
 
                                 file.flush();
                                 file.close();
+
+                                CreatePost.sendJson(cancel);
                             }
                         }
                         else System.out.println("Operação inválida!");
