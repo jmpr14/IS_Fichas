@@ -37,7 +37,7 @@ public class RegistaPedido {
 
 //step4 execute query
 
-            System.out.println("Doente");
+
             String selectDoente = "select * from doente where num_utente = '" + pedido.getNumUtente() + "';";
             ResultSet resultDoente = stmt.executeQuery(selectDoente);
             if(!resultDoente.next()){
@@ -51,7 +51,7 @@ public class RegistaPedido {
                 id_doente = resultDoente1.getInt(1);
             }
 
-            System.out.println("Exame");
+
             String selectExame = "select * from exame where id_exame = '" + pedido.getId_exame() + "';";
             ResultSet resultExame = stmt.executeQuery(selectExame);
             if(!resultExame.next()){
@@ -62,7 +62,7 @@ public class RegistaPedido {
             //int result1 = stmt.executeUpdate(queryExame);
 
 
-            System.out.println("Pedido");
+
             int estado = 2;
             if(pedido.getTipo().equals("NW")){
                 estado = 0;
