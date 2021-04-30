@@ -221,7 +221,7 @@ public class DataBase {
 
             Statement stmt = conn.createStatement();
 
-            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\", \"" + descricao + "\");");
+            stmt.execute("insert into Pedido values(0, NOW(), \"" + "0" + "\", \"" + "0" + "\", \"" + id_exame + "\", \"" + id_doente + "\", \"" + descricao + "\",0);");
 
             Statement select = conn.createStatement();
 
@@ -565,6 +565,56 @@ public class DataBase {
             System.out.println(e.getMessage());
         }
         return a;
+    }
+
+    public void notificacoes(Integer input) {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/desk_services?user=root&password="
+                            + this.pass + "&useTimezone=true&serverTimezone=UTC");
+
+            switch (input) {
+                case 1:
+                    System.out.println("\n Pedidos com notificações ativas:");
+                    Statement select = conn.createStatement();
+                    String sql = "select id_pedido from pedido where notificacao = 1;" ;
+                    ResultSet rss = select.executeQuery(sql);
+                    while(rss.next()){
+                        System.out.println("  -> Pedido " + rss.getString(1));
+                    }
+                    System.out.println();
+                    break;
+                case 2:
+                    BufferedReader reader1 = new BufferedReader(new InputStreamReader(System.in));
+                    System.out.println("---- Insira o número do pedido do qual pretende receber notificações.");
+                    int id_pedido1 = Integer.parseInt(reader1.readLine());
+                    Statement stmt1 = conn.createStatement();
+                    boolean done1 = stmt1.execute("update pedido set notificacao = 1 where id_pedido = " + id_pedido1 + " ;");
+                    conn.close();
+                    if(done1) System.out.println("\nNotificações ativadas para o Pedido " + id_pedido1 + "!\n");
+                    else System.out.println("Operação Inválida");
+                    break;
+                case 3:
+                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in));
+                    System.out.println("---- Insira o número do pedido do qual pretende cancelar as notificações.");
+                    int id_pedido2 = Integer.parseInt(reader2.readLine());
+                    Statement stmt2 = conn.createStatement();
+                    boolean done2 = stmt2.execute("update pedido set notificacao = 0 where id_pedido = " + id_pedido2 + " ;");
+                    conn.close();
+                    if(done2) System.out.println("\nNotificações ativadas para o Pedido " + id_pedido2 + "!\n");
+                    else System.out.println("Operação Inválida");break;
+                default:
+                    break;
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

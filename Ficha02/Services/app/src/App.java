@@ -1,13 +1,13 @@
 import org.json.JSONObject;
-
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import java.net.*;
 
 public class App {
 
     public static void main(String[] args) {
+
+        Notificador threadNotificador = new Notificador();
+        threadNotificador.start();
 
         String pass = "";
 
@@ -35,6 +35,7 @@ public class App {
             System.out.println("2 - Ver Pedidos.");
             System.out.println("3 - Ver Relatório.");
             System.out.println("4 - Cancelar Pedido.");
+            System.out.println("5 - Serviço de Notificações de Realização de Exames.");
 
             try {
                 op = Integer.parseInt(reader.readLine());
@@ -164,6 +165,14 @@ public class App {
                         }
                         else System.out.println("Operação inválida!");
                         break;
+                    case 5:
+                        BufferedReader type = new BufferedReader(new InputStreamReader(System.in));
+                        System.out.println("\n-- 1 - ver notificações ativas.");
+                        System.out.println("-- 2 - ativar notificação para pedido.");
+                        System.out.println("-- 3 - desativar notificação para pedido.");
+                        int input = Integer.parseInt(type.readLine());
+                        bd.notificacoes(input);
+                        break;
                     default:
                         System.out.println("\nInsira uma operação válida!");
                         break;
@@ -172,5 +181,6 @@ public class App {
                 System.out.println(e.getMessage());
             }
         }
+        threadNotificador.stopThread();
     }
 }

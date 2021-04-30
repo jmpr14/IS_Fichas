@@ -1,7 +1,7 @@
 package aebd.group.webapp;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
+import java.net.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -71,12 +71,27 @@ public class RegistaPedido {
 
             int result5 = stmt.executeUpdate(queryPedido2);
 
+            String sql = "select notificacao from pedido where id_pedido = " + id_pedido + ";" ;
+            ResultSet rss = stmt.executeQuery(sql);
+            rss.next();
 
+            if(rss.getInt(1)==1) {
+                try {
+                    Socket s = new Socket("localhost", 6666);
+                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                    dout.writeUTF(id_pedido);
+                    dout.flush();
+                    dout.close();
+                    s.close();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
 
 //step5 close the connection object
             con.close();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 }

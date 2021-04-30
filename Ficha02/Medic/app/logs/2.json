@@ -1,1 +1,1 @@
-{"telefone":"911111111","siglaExame":"RADIO","numUtente":"123456789","num_Pedido":"2","nome":"Jose Ferreira","relatorio":"segundo teste de json","id_exame":"2","num_Episodio":"0","id_doente":"1","morada":"Rua da Universidade","descricao":"radiografia urgente!"}
+{"tipo":"RE","telefone":"917722772","siglaExame":"TAC","numUtente":"123456789","num_Pedido":"2","nome":"Gervásio","relatorio":"e que ? ta tudo?","id_exame":"2","num_Episodio":"1","id_doente":"1","morada":"Braga","descricao":"TAC urgente 2"}
