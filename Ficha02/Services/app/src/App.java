@@ -184,5 +184,6 @@ public class App {
             }
         }
         threadNotificador.stopThread();
+        socket.close();
     }
 }
