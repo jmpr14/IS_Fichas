@@ -75,11 +75,10 @@ public class RegistaPedido {
             ResultSet rss = stmt.executeQuery(sql);
             rss.next();
 
-            Socket socket = new Socket("127.0.0.1", 65000);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            Notificador not = new Notificador(socket, out);
-
-            if(rss.getInt(1)==1) {
+            if (rss.getInt(1) == 1) {
+                Socket socket = new Socket("127.0.0.1", 65000);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                Notificador not = new Notificador(socket, out);
                 System.out.println("Iniciar notificação!");
                 not.notificador(id_pedido);
             }
