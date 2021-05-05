@@ -15,20 +15,18 @@ public class NotificadorServer implements Runnable{
     }
 
     public void run() {
+        running=true;
         while (running) {
             try {
                 Socket conn = socket.accept();
-                System.out.println("Ligação Aceite!");
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                DataInputStream in = new DataInputStream(conn.getInputStream());
+
 
                 String r;
                 while (socket.isBound()) {
-                    r = in.readLine();
+                    r = in.readUTF();
+                    System.out.println("\nNOTIFICAÇÃO: Pedido " + r + " realizado!\n");
 
-                    while ((r.isEmpty() != true)) {
-                        System.out.println("\nNOTIFICAÇÃO: Pedido " + r + " realizado!\n");
-                        r = in.readLine();
-                    }
                 }
             } catch (Exception e) {
             }

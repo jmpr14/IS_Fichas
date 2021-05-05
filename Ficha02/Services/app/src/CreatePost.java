@@ -18,8 +18,6 @@ public class CreatePost {
             httpConnection.setRequestMethod("POST");
             httpConnection.setRequestProperty("Content-Type", "application/json");
             httpConnection.setRequestProperty("Accept", "application/json");
-            // Not required
-            // urlConnection.setRequestProperty("Content-Length", String.valueOf(input.getBytes().length));
 
             // Writes the JSON parsed as string to the connection
             DataOutputStream wr = new DataOutputStream(httpConnection.getOutputStream());

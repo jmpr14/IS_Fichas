@@ -75,7 +75,7 @@ public class RegistaPedido {
             ResultSet rss = stmt.executeQuery(sql);
             rss.next();
 
-            Socket socket = new Socket("127.0.0.1", 6666);
+            Socket socket = new Socket("127.0.0.1", 65000);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             Notificador not = new Notificador(socket, out);
 
