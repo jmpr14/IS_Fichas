@@ -22,18 +22,18 @@ public class RegistaPedido {
         }
 
         try {
-//step1 load the driver class
+            //step1 load the driver class
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-//step2 create  the connection object
+            //step2 create  the connection object
             Connection con = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/desk_services?user=root&password="
                             + pass + "&useTimezone=true&serverTimezone=UTC");
 
-//step3 create the statement object
+            //step3 create the statement object
             Statement stmt = con.createStatement();
 
-//step4 execute query
+            //step4 execute query
 
             String selectDoente = "select * from doente where num_utente = '" + pedido.getNumUtente() + "';";
             ResultSet resultDoente = stmt.executeQuery(selectDoente);
@@ -75,20 +75,16 @@ public class RegistaPedido {
             ResultSet rss = stmt.executeQuery(sql);
             rss.next();
 
-            Socket s = new Socket("localhost", 6666);
+            Socket socket = new Socket("127.0.0.1", 6666);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            Notificador not = new Notificador(socket, out);
+
             if(rss.getInt(1)==1) {
-                try {
-                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                    dout.writeUTF(id_pedido);
-                    dout.flush();
-                    dout.close();
-                    s.close();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+                System.out.println("Iniciar notificação!");
+                not.notificador(id_pedido);
             }
 
-//step5 close the connection object
+            //step5 close the connection object
             con.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());

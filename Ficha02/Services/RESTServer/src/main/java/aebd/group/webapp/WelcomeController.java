@@ -1,18 +1,12 @@
 package aebd.group.webapp;
 
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.*;
 import java.util.*;
 
 @RestController
 public class WelcomeController {
 
-
-	@PostMapping(
-			value = "/services")
+	@PostMapping(value = "/services")
 	public void recebeJson(@RequestBody Map<String, Object> payload) {
 
 		System.out.println("Recebi dados");

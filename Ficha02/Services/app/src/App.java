@@ -1,11 +1,15 @@
 import org.json.JSONObject;
 import java.io.*;
+import java.net.ServerSocket;
 
 public class App {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
 
-        Notificador threadNotificador = new Notificador();
+        //Servidor de Notificações
+        ServerSocket socket = new ServerSocket(65000);
+
+        NotificadorServer threadNotificador = new NotificadorServer(socket);
         Thread t1 = new Thread(threadNotificador);
         t1.start();
 
@@ -101,8 +105,6 @@ public class App {
                         try (FileWriter file = new FileWriter("./logs/"+id_pedido+".json")) {
 
                             file.write(jo.toString());
-                            //System.out.println("Successfully Copied JSON Object to File...");
-                            //System.out.println("\nJSON Object: " + jo);
 
                             file.flush();
                             file.close();
@@ -156,8 +158,6 @@ public class App {
                             try (FileWriter file = new FileWriter("./cancel/"+num_Pedido+".json")) {
 
                                 file.write(cancel.toString());
-                                //System.out.println("Successfully Copied JSON Object to File...");
-                                //System.out.println("\nJSON Object: " + cancel);
 
                                 file.flush();
                                 file.close();
@@ -184,6 +184,5 @@ public class App {
             }
         }
         threadNotificador.stopThread();
-        t1.interrupt();
     }
 }

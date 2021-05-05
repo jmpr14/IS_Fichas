@@ -592,9 +592,9 @@ public class DataBase {
                     System.out.println("---- Insira o número do pedido do qual pretende receber notificações.");
                     int id_pedido1 = Integer.parseInt(reader1.readLine());
                     Statement stmt1 = conn.createStatement();
-                    boolean done1 = stmt1.execute("update pedido set notificacao = 1 where id_pedido = " + id_pedido1 + " ;");
+                    boolean update1 = stmt1.execute("update pedido set notificacao = 1 where id_pedido = " + id_pedido1 + " ;");
                     conn.close();
-                    if(done1) System.out.println("\nNotificações ativadas para o Pedido " + id_pedido1 + "!\n");
+                    if(!update1) System.out.println("\nNotificações ativadas para o Pedido " + id_pedido1 + "!\n");
                     else System.out.println("Operação Inválida");
                     break;
                 case 3:
@@ -602,9 +602,9 @@ public class DataBase {
                     System.out.println("---- Insira o número do pedido do qual pretende cancelar as notificações.");
                     int id_pedido2 = Integer.parseInt(reader2.readLine());
                     Statement stmt2 = conn.createStatement();
-                    boolean done2 = stmt2.execute("update pedido set notificacao = 0 where id_pedido = " + id_pedido2 + " ;");
+                    boolean update2 = stmt2.execute("update pedido set notificacao = 0 where id_pedido = " + id_pedido2 + " ;");
                     conn.close();
-                    if(done2) System.out.println("\nNotificações ativadas para o Pedido " + id_pedido2 + "!\n");
+                    if(!update2) System.out.println("\nNotificações desativadas para o Pedido " + id_pedido2 + "!\n");
                     else System.out.println("Operação Inválida");break;
                 default:
                     break;
